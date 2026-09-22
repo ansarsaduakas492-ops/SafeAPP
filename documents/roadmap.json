@@ -1,0 +1,353 @@
+{
+  "schemaVersion": 1,
+  "title": "SafePhrase: build and understand",
+  "startDate": "2026-09-24",
+  "endDate": "2026-10-08",
+  "timezone": "Europe/Kyiv",
+  "scheduleConfirmed": true,
+  "updated": "2026-09-22",
+  "milestones": [
+    {
+      "id": "M0",
+      "title": "Choose the starting point",
+      "due": "2026-09-24",
+      "kind": "call",
+      "status": "planned",
+      "dependsOn": [],
+      "forecast": "not_assessed",
+      "forecastNote": "Download September 23; work starts September 24. Confirm call times across Kyiv/Bishkek, available study time, and device.",
+      "outcome": "Student understands the goal, owns the setup steps, and has a feasible calendar.",
+      "demo": "Explain the intended user flow and point to the next manual step; no existing application is expected.",
+      "concepts": [
+        "C# is the language; MAUI is the application framework; XAML describes the UI.",
+        "A solution groups projects; a project produces an application or library.",
+        "Generated code is a learning aid: the student still runs and explains it."
+      ],
+      "teachBack": "Which part of the application will open SMS, and who actually confirms sending?",
+      "acceptance": [
+        "Meeting dates, available time, Android device/API and speech language recorded.",
+        "Project name chosen by the student, or explicitly recorded as pending before project creation.",
+        "Student can explain the planned SOS flow and locate setup instructions."
+      ],
+      "review": "",
+      "acceptanceEvidence": [],
+      "mentorAcceptance": "",
+      "tasks": [
+        {
+          "id": "M0-1",
+          "owner": "student",
+          "title": "Confirm time, phone, language, dates, and current programming experience with the mentor",
+          "status": "pending",
+          "evidence": []
+        },
+        {
+          "id": "M0-2",
+          "owner": "agent",
+          "title": "Explain the small application structure and record kickoff decisions without changing the source specification",
+          "status": "pending",
+          "evidence": []
+        },
+        {
+          "id": "M0-3",
+          "owner": "student",
+          "title": "Choose the project name and explain project name versus visible app title",
+          "status": "pending",
+          "evidence": []
+        }
+      ]
+    },
+    {
+      "id": "M1",
+      "title": "First app and saved settings",
+      "due": "2026-09-29",
+      "kind": "call",
+      "status": "planned",
+      "dependsOn": [
+        "M0"
+      ],
+      "forecast": "not_assessed",
+      "forecastNote": "Setup and first device deployment are the main schedule uncertainty.",
+      "outcome": "The student launches their own project on Android and saves a phrase and contacts.",
+      "demo": "Launch on the phone, change the phrase/contact, restart, and show saved values. Show one manually edited label.",
+      "concepts": [
+        "XAML controls are connected to C# behavior.",
+        "Settings persist after the application closes.",
+        "Git diff shows a change; generated build files are not source code."
+      ],
+      "teachBack": "Why does a saved phrase survive a restart while an ordinary variable does not?",
+      "acceptance": [
+        "Student manually installed tools, created the named MAUI project under src, and launched it on Android.",
+        "Phrase, multiple contacts (add/edit/delete), SOS text, and channel settings persist locally.",
+        "Missing phrase/contact prevents starting Safety Mode.",
+        "Student changed a label manually and explained the relevant XAML/C# files."
+      ],
+      "review": "",
+      "acceptanceEvidence": [],
+      "mentorAcceptance": "",
+      "tasks": [
+        {
+          "id": "M1-1",
+          "owner": "student",
+          "title": "Install Visual Studio and MAUI tools, create the named project, and run it on Android using student-setup.md",
+          "status": "pending",
+          "evidence": []
+        },
+        {
+          "id": "M1-2",
+          "owner": "agent",
+          "title": "Inspect the student's scaffold; add suitable ignore rules and implement Home/Settings with local persistence and validation",
+          "status": "pending",
+          "evidence": []
+        },
+        {
+          "id": "M1-3",
+          "owner": "student",
+          "title": "Edit one UI label, run again, exercise contact CRUD, restart to verify persistence, and inspect the Git diff",
+          "status": "pending",
+          "evidence": []
+        },
+        {
+          "id": "M1-4",
+          "owner": "agent",
+          "title": "Review changes, record checks and short explanations, and prepare Tuesday evidence",
+          "status": "pending",
+          "evidence": []
+        }
+      ]
+    },
+    {
+      "id": "S1",
+      "title": "Prove offline speech early",
+      "due": "2026-09-28",
+      "kind": "internal",
+      "status": "planned",
+      "dependsOn": [
+        "M0"
+      ],
+      "entryCondition": "M1-1 must be done; settings implementation need not be finished.",
+      "forecast": "not_assessed",
+      "forecastNote": "Critical technical gate. One focused diagnosis session if the experiment fails.",
+      "outcome": "A verified speech approach on the target device, or an explicit blocker and mentor decision.",
+      "demo": "With network disabled, recognize the chosen phrase after silence and unrelated speech, stop, and repeat.",
+      "concepts": [
+        "Offline recognition means audio is processed on the device.",
+        "A speech session can finish before Safety Mode is stopped.",
+        "Device APIs can be unavailable even when the project builds."
+      ],
+      "teachBack": "Why is recognizing a phrase once different from keeping Safety Mode usable after a pause?",
+      "acceptance": [
+        "Device/API, speech package version, language availability, and repeatable results recorded.",
+        "No audio storage or online fallback in the chosen implementation; offline device behavior checked.",
+        "Silence, unrelated speech, repeat recognition, Stop, and microphone denial tested.",
+        "Foreground/lock-screen behavior agreed; unresolved failure blocks voice integration rather than being labelled success."
+      ],
+      "review": "",
+      "acceptanceEvidence": [],
+      "mentorAcceptance": "",
+      "tasks": [
+        {
+          "id": "S1-1",
+          "owner": "agent",
+          "title": "Implement a minimal offline speech experiment and inspect privacy/configuration; keep it small and reusable",
+          "status": "pending",
+          "evidence": []
+        },
+        {
+          "id": "S1-2",
+          "owner": "student",
+          "title": "Run the speech matrix on the physical phone, report outcomes, and explain offline versus online processing",
+          "status": "pending",
+          "evidence": []
+        },
+        {
+          "id": "S1-3",
+          "owner": "agent",
+          "title": "Review feasibility and session behavior; record the selected approach or concrete blocker/options for the mentor",
+          "status": "pending",
+          "evidence": []
+        }
+      ]
+    },
+    {
+      "id": "M2",
+      "title": "Complete the SOS path with a test button",
+      "due": "2026-10-01",
+      "kind": "call",
+      "status": "planned",
+      "dependsOn": [
+        "M1"
+      ],
+      "forecast": "not_assessed",
+      "forecastNote": "Can proceed while S1 is blocked; report speech feasibility at this call.",
+      "outcome": "Test SOS drives countdown, cancellation, real location, and a prepared SMS.",
+      "demo": "Cancel one countdown; complete another and inspect the SMS recipient, location link, and timestamp without sending accidentally.",
+      "concepts": [
+        "async/await keeps the UI responsive while waiting for the phone.",
+        "A state describes whether the app is idle, listening, or counting down.",
+        "Opening a message composer does not prove delivery."
+      ],
+      "teachBack": "What must happen if the location result arrives after the student pressed Cancel?",
+      "acceptance": [
+        "Five-second countdown, Cancel, and Send Now behave consistently and prevent duplicate opening.",
+        "Prepared SMS contains the selected recipient, message, real map link when available, and current timestamp.",
+        "Location denial/unavailability/timeout behavior is agreed and tested; coordinates are never fabricated.",
+        "Copy fallback works when message composition cannot be opened.",
+        "Speech gate result is available for the Thursday call, including blockers if any."
+      ],
+      "review": "",
+      "acceptanceEvidence": [],
+      "mentorAcceptance": "",
+      "tasks": [
+        {
+          "id": "M2-1",
+          "owner": "agent",
+          "title": "Resolve missing-location and recipient-selection rules with the student/mentor, then implement Test SOS, countdown, cancellation, and Send Now",
+          "status": "pending",
+          "evidence": []
+        },
+        {
+          "id": "M2-2",
+          "owner": "agent",
+          "title": "Connect geolocation, message formatting, SMS composition, and copy fallback; test meaningful pure logic and state behavior",
+          "status": "pending",
+          "evidence": []
+        },
+        {
+          "id": "M2-3",
+          "owner": "student",
+          "title": "Change the default message manually; run Cancel, permission denial, SMS preparation, and fallback checks on the phone",
+          "status": "pending",
+          "evidence": []
+        },
+        {
+          "id": "M2-4",
+          "owner": "agent",
+          "title": "Review SOS transitions and async cancellation; fix findings and prepare Thursday evidence including S1 status",
+          "status": "pending",
+          "evidence": []
+        }
+      ]
+    },
+    {
+      "id": "M3",
+      "title": "Voice-triggered flow and both channels",
+      "due": "2026-10-06",
+      "kind": "call",
+      "status": "planned",
+      "dependsOn": [
+        "S1",
+        "M2"
+      ],
+      "forecast": "not_assessed",
+      "forecastNote": "Do not hide a failed speech gate behind Test SOS.",
+      "outcome": "The real voice phrase starts the complete flow; SMS and WhatsApp are available.",
+      "demo": "Start listening, say an unrelated phrase then the trigger, cancel once, repeat, and open the chosen channel. Show Stop.",
+      "concepts": [
+        "Normalize text before comparing it.",
+        "A device event starts the same SOS flow as the test button.",
+        "Resources and pending operations must stop when Safety Mode ends."
+      ],
+      "teachBack": "Why do the voice trigger and Test SOS call the same flow instead of duplicating its code?",
+      "acceptance": [
+        "Start/Stop, visible listening state, recognized-text preview, normalized phrase matching, and voice countdown work.",
+        "Repeated detections do not create overlapping countdowns or message composers.",
+        "Agreed foreground/lock-screen behavior and restart rules work; Stop stops audio processing.",
+        "SMS and WhatsApp preparation, channel selection, recipient behavior, and missing-app fallback tested.",
+        "Student adds a small phrase-normalization test case manually and explains it.",
+        "WhatsApp opens the selected contact with encoded text, including +996 numbers and the agreed message language. The user confirms sending; recipients need no SafePhrase app. Opening the composer is not proof of delivery."
+      ],
+      "review": "",
+      "acceptanceEvidence": [],
+      "mentorAcceptance": "",
+      "tasks": [
+        {
+          "id": "M3-1",
+          "owner": "agent",
+          "title": "Integrate verified speech, normalized matching, session completion handling, Safety Mode state, and lifecycle cleanup",
+          "status": "pending",
+          "evidence": []
+        },
+        {
+          "id": "M3-2",
+          "owner": "agent",
+          "title": "Add WhatsApp click-to-chat with international phone number and URL-encoded text; offer SMS/copy alternatives and manual sending, without bots or a messaging backend",
+          "status": "pending",
+          "evidence": []
+        },
+        {
+          "id": "M3-3",
+          "owner": "student",
+          "title": "Add one normalization test case manually; exercise the full voice flow, Stop, both channels, and repeated triggers on Android",
+          "status": "pending",
+          "evidence": []
+        },
+        {
+          "id": "M3-4",
+          "owner": "agent",
+          "title": "Perform focused independent review of speech/privacy and SOS state transitions; fix findings and prepare Tuesday evidence",
+          "status": "pending",
+          "evidence": []
+        }
+      ]
+    },
+    {
+      "id": "M4",
+      "title": "Package, verify, and explain",
+      "due": "2026-10-08",
+      "kind": "call",
+      "status": "planned",
+      "dependsOn": [
+        "M3"
+      ],
+      "forecast": "not_assessed",
+      "forecastNote": "Run checks throughout development; reserve October 7-8 for final device regressions, fixes, and rehearsal. No speculative features.",
+      "outcome": "An installable APK, requirement evidence, honest limitations, and a student who can explain the app.",
+      "demo": "Install the APK, configure it, trigger and cancel SOS, repeat to prepare a message, then explain the main flow and one manual change.",
+      "concepts": [
+        "Source code, build output, and an APK are different artifacts.",
+        "Tests provide evidence for specific conditions, not a guarantee for every phone.",
+        "The student can navigate settings, speech, and SOS flow without reading every line."
+      ],
+      "teachBack": "Trace the safe phrase from its saved setting to the prepared message, naming the main responsibilities.",
+      "acceptance": [
+        "AC-01 through AC-06 and FR-01 through FR-20 traced to recorded checks; any unmet requirement explicitly recorded.",
+        "Packaged APK installs and runs on the chosen Android device; signing/build configuration and reproduction steps documented.",
+        "Final review has no unresolved blocking findings; remaining limitations are listed for mentor review and no credentials or personal contact data are committed.",
+        "Student explains the flow, performs a small change, and describes privacy, offline, foreground, and manual-send limitations."
+      ],
+      "review": "",
+      "acceptanceEvidence": [],
+      "mentorAcceptance": "",
+      "tasks": [
+        {
+          "id": "M4-1",
+          "owner": "agent",
+          "title": "Complete the requirement/check matrix, fix device regressions, and write concise build/run/limitations notes",
+          "status": "pending",
+          "evidence": []
+        },
+        {
+          "id": "M4-2",
+          "owner": "student",
+          "title": "Build with guidance, install the APK, run the acceptance scenarios, and report real device results",
+          "status": "pending",
+          "evidence": []
+        },
+        {
+          "id": "M4-3",
+          "owner": "agent",
+          "title": "Perform focused final review and relevant validation; prepare the candidate and an accurate final handoff",
+          "status": "pending",
+          "evidence": []
+        },
+        {
+          "id": "M4-4",
+          "owner": "student",
+          "title": "Rehearse the short walkthrough, explain the main responsibilities, and make one small change without generated replacement code",
+          "status": "pending",
+          "evidence": []
+        }
+      ]
+    }
+  ]
+}

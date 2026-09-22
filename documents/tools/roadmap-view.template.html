@@ -1,0 +1,96 @@
+<div id="safephrase-roadmap">
+  <style>
+    #safephrase-roadmap{color:var(--foreground);overflow-wrap:anywhere}
+    #safephrase-roadmap .milestones{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:20px 0}
+    #safephrase-roadmap .milestone-label{display:block;text-align:left}
+    #safephrase-roadmap .stage-meta{display:flex;flex-wrap:wrap;gap:8px 18px;margin:12px 0}
+    #safephrase-roadmap .tasks{list-style:none;padding:0}
+    #safephrase-roadmap .tasks li{padding:14px 0;border-bottom:1px solid var(--border)}
+    #safephrase-roadmap .task-meta{display:block;color:var(--muted-foreground);margin-top:4px}
+    #safephrase-roadmap details{margin:18px 0}
+    #safephrase-roadmap summary{font-weight:500;padding:10px 0;cursor:pointer}
+    #safephrase-roadmap li{margin:6px 0}
+    #safephrase-roadmap .call-date{font-weight:500}
+    @media(max-width:520px){#safephrase-roadmap .milestones{grid-template-columns:repeat(2,minmax(0,1fr))}}
+  </style>
+  <h2>Two weeks: build and understand</h2>
+  <p id="roadmap-dates" class="text-small"></p>
+  <p id="roadmap-progress" aria-live="polite"></p>
+  <nav class="milestones" aria-label="Choose a milestone" id="roadmap-navigation"></nav>
+  <section aria-labelledby="roadmap-stage-title">
+    <h3 id="roadmap-stage-title"></h3>
+    <div class="stage-meta text-small" id="roadmap-stage-meta"></div>
+    <p id="roadmap-outcome"></p>
+    <p><strong>Show at checkpoint:</strong> <span id="roadmap-demo"></span></p>
+    <p class="text-small" id="roadmap-forecast"></p>
+    <div class="viz-row">
+      <label class="form-label" for="roadmap-owner">Show work for
+        <select id="roadmap-owner" class="form-select"><option value="all">Everyone</option><option value="student">Student</option><option value="agent">Agent</option></select>
+      </label>
+    </div>
+    <ul id="roadmap-tasks" class="tasks" aria-live="polite"></ul>
+    <details open><summary>What the student learns</summary><ul id="roadmap-concepts"></ul><p><strong>Explain in your own words:</strong> <span id="roadmap-question"></span></p></details>
+    <details><summary>Acceptance and review evidence</summary><ul id="roadmap-acceptance"></ul><p id="roadmap-review"></p><ul id="roadmap-evidence"></ul><p id="roadmap-mentor"></p></details>
+  </section>
+  <hr>
+  <p class="text-small text-muted">Select milestones to explore. This view does not mark work complete. Agents record verified progress in roadmap.json and rebuild the map. Student checks and mentor acceptance remain explicit.</p>
+  <noscript>Enable JavaScript to explore milestones, or read documents/roadmap.json and documents/delivery-plan.md.</noscript>
+  <script type="application/json" id="roadmap-data">__ROADMAP_DATA__</script>
+  <script>
+  (() => {
+    const root = document.getElementById('safephrase-roadmap');
+    const data = JSON.parse(root.querySelector('#roadmap-data').textContent);
+    const get = id => root.querySelector('#roadmap-' + id);
+    const label = text => text.replaceAll('_', ' ');
+    const shortDate = iso => new Date(iso + 'T12:00:00Z').toLocaleDateString('en-GB', {day:'numeric',month:'short',timeZone:'UTC'});
+    let selected = data.milestones.find(m => m.status === 'active')?.id || data.milestones.find(m => m.status !== 'accepted')?.id || data.milestones[0].id;
+    let owner = 'all';
+    const taskCount = data.milestones.reduce((n,m) => n + m.tasks.length, 0);
+    const doneCount = data.milestones.reduce((n,m) => n + m.tasks.filter(t => t.status === 'done').length, 0);
+    get('dates').textContent = `${shortDate(data.startDate)} – ${shortDate(data.endDate)} 2026 · Tuesday / Thursday calls · ${data.timezone} · ${data.scheduleConfirmed ? 'Schedule confirmed' : 'Dates await kickoff confirmation'} · Snapshot ${data.updated}`;
+    get('progress').textContent = `${doneCount} / ${taskCount} tasks have completion evidence · ${data.milestones.filter(m => m.status === 'accepted').length} / ${data.milestones.length} checkpoints accepted`;
+    const fillList = (node, items) => { node.replaceChildren(...items.map(text => { const li = document.createElement('li'); li.textContent = text; return li; })); };
+    function render() {
+      const stage = data.milestones.find(m => m.id === selected);
+      get('navigation').replaceChildren(...data.milestones.map(m => {
+        const button = document.createElement('button'); button.type = 'button'; button.className = 'btn';
+        button.setAttribute('aria-pressed', String(m.id === selected));
+        button.setAttribute('aria-label', `${m.id}: ${m.title}, ${shortDate(m.due)}, ${label(m.status)}`);
+        const top = document.createElement('span'); top.className = 'milestone-label'; top.textContent = `${m.id} · ${shortDate(m.due)}${m.kind === 'internal' ? ' · internal' : ''}`;
+        const title = document.createElement('span'); title.className = 'milestone-label'; title.textContent = m.title;
+        button.append(top, title); button.addEventListener('click', () => { selected = m.id; render(); get('navigation').querySelector(`[aria-pressed="true"]`).focus(); save(); }); return button;
+      }));
+      get('stage-title').textContent = `${stage.id} — ${stage.title}`;
+      const entries = [`${stage.kind === 'call' ? 'Call' : 'Internal gate'}: ${shortDate(stage.due)}`, `Status: ${label(stage.status)}`, `Depends on: ${stage.dependsOn.join(', ') || 'none'}`];
+      if (stage.entryCondition) entries.push(stage.entryCondition);
+      get('stage-meta').replaceChildren(...entries.map(text => {const span = document.createElement('span');span.textContent = text;return span;}));
+      get('outcome').textContent = stage.outcome; get('demo').textContent = stage.demo;
+      get('forecast').textContent = `Forecast: ${label(stage.forecast)}. ${stage.forecastNote}`;
+      const tasks = stage.tasks.filter(t => owner === 'all' || t.owner === owner);
+      get('tasks').replaceChildren(...tasks.map(task => {
+        const li = document.createElement('li'); const title = document.createElement('span'); title.textContent = `${task.id} · ${task.title}`;
+        const meta = document.createElement('span'); meta.className = 'task-meta text-small'; meta.textContent = `${task.owner === 'student' ? 'Student · manual' : 'Agent'} · ${label(task.status)}`;
+        li.append(title,meta);
+        if (task.evidence.length) { const evidence = document.createElement('ul'); fillList(evidence,task.evidence); li.append(evidence); }
+        return li;
+      }));
+      if (!tasks.length) {const li = document.createElement('li');li.textContent = 'No tasks for this role in this milestone.';get('tasks').append(li);}
+      fillList(get('concepts'),stage.concepts); get('question').textContent = stage.teachBack;
+      fillList(get('acceptance'),stage.acceptance); get('review').textContent = 'Review: ' + (stage.review || 'Not recorded');
+      fillList(get('evidence'),stage.acceptanceEvidence); get('mentor').textContent = 'Mentor acceptance: ' + (stage.mentorAcceptance || 'Not recorded');
+      get('owner').value = owner;
+    }
+    function save() {
+      if (window.openai?.setWidgetState) window.openai.setWidgetState({modelContent:{milestone:selected,role:owner},privateContent:null}).catch(() => {});
+    }
+    function restore(state) {
+      const saved = state?.modelContent;
+      if (saved && data.milestones.some(m => m.id === saved.milestone)) selected = saved.milestone;
+      if (saved && ['all','student','agent'].includes(saved.role)) owner = saved.role;
+    }
+    get('owner').addEventListener('change', event => {owner = event.target.value;render();save();});
+    restore(window.openai?.widgetState); render();
+    window.addEventListener('openai:set_globals', event => {restore(event.detail?.globals?.widgetState);render();});
+  })();
+  </script>
+</div>

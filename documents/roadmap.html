@@ -1,0 +1,458 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SafePhrase learning roadmap</title>
+<style>
+:root{color-scheme:light dark;--background:light-dark(#fafaf8,#151819);--foreground:light-dark(#202726,#e7edea);--muted-foreground:light-dark(#53635d,#b4c4bd);--border:light-dark(#ccd6d0,#415249);--primary:light-dark(#214e3b,#bce4cc);--primary-foreground:light-dark(#fff,#14271d);--accent:light-dark(#e3eee7,#253b30);--accent-foreground:var(--foreground);--font-size-base:16px;--viz-series-1:light-dark(#347558,#a8d4bc)}
+body{margin:0;background:var(--background);color:var(--foreground);font:400 var(--font-size-base)/1.55 system-ui,sans-serif}main{max-width:960px;margin:auto;padding:28px 20px}h1,h2,h3{font-weight:500}h1{font-size:1.65em}h2{font-size:1.25em}h3{font-size:1.05em}button,select{font:inherit}.btn{padding:10px 14px;border:1px solid var(--border);border-radius:8px;color:var(--foreground);background:transparent;cursor:pointer}.btn[aria-pressed="true"]{background:var(--primary);color:var(--primary-foreground)}.form-select{padding:8px;max-width:100%;color:var(--foreground);background:var(--background);border:1px solid var(--border);border-radius:6px}.text-small{font-size:.875em}.text-muted{color:var(--muted-foreground)}.viz-row{display:flex;gap:12px;align-items:center;flex-wrap:wrap}.form-label{display:grid;gap:4px}a{color:inherit}hr{border:0;border-top:1px solid var(--border);margin:22px 0}button:focus-visible,select:focus-visible,summary:focus-visible{outline:3px solid var(--viz-series-1);outline-offset:3px}button:disabled{opacity:.6}code{overflow-wrap:anywhere}
+</style></head><body><main>
+<div id="safephrase-roadmap">
+  <style>
+    #safephrase-roadmap{color:var(--foreground);overflow-wrap:anywhere}
+    #safephrase-roadmap .milestones{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:20px 0}
+    #safephrase-roadmap .milestone-label{display:block;text-align:left}
+    #safephrase-roadmap .stage-meta{display:flex;flex-wrap:wrap;gap:8px 18px;margin:12px 0}
+    #safephrase-roadmap .tasks{list-style:none;padding:0}
+    #safephrase-roadmap .tasks li{padding:14px 0;border-bottom:1px solid var(--border)}
+    #safephrase-roadmap .task-meta{display:block;color:var(--muted-foreground);margin-top:4px}
+    #safephrase-roadmap details{margin:18px 0}
+    #safephrase-roadmap summary{font-weight:500;padding:10px 0;cursor:pointer}
+    #safephrase-roadmap li{margin:6px 0}
+    #safephrase-roadmap .call-date{font-weight:500}
+    @media(max-width:520px){#safephrase-roadmap .milestones{grid-template-columns:repeat(2,minmax(0,1fr))}}
+  </style>
+  <h2>Two weeks: build and understand</h2>
+  <p id="roadmap-dates" class="text-small"></p>
+  <p id="roadmap-progress" aria-live="polite"></p>
+  <nav class="milestones" aria-label="Choose a milestone" id="roadmap-navigation"></nav>
+  <section aria-labelledby="roadmap-stage-title">
+    <h3 id="roadmap-stage-title"></h3>
+    <div class="stage-meta text-small" id="roadmap-stage-meta"></div>
+    <p id="roadmap-outcome"></p>
+    <p><strong>Show at checkpoint:</strong> <span id="roadmap-demo"></span></p>
+    <p class="text-small" id="roadmap-forecast"></p>
+    <div class="viz-row">
+      <label class="form-label" for="roadmap-owner">Show work for
+        <select id="roadmap-owner" class="form-select"><option value="all">Everyone</option><option value="student">Student</option><option value="agent">Agent</option></select>
+      </label>
+    </div>
+    <ul id="roadmap-tasks" class="tasks" aria-live="polite"></ul>
+    <details open><summary>What the student learns</summary><ul id="roadmap-concepts"></ul><p><strong>Explain in your own words:</strong> <span id="roadmap-question"></span></p></details>
+    <details><summary>Acceptance and review evidence</summary><ul id="roadmap-acceptance"></ul><p id="roadmap-review"></p><ul id="roadmap-evidence"></ul><p id="roadmap-mentor"></p></details>
+  </section>
+  <hr>
+  <p class="text-small text-muted">Select milestones to explore. This view does not mark work complete. Agents record verified progress in roadmap.json and rebuild the map. Student checks and mentor acceptance remain explicit.</p>
+  <noscript>Enable JavaScript to explore milestones, or read documents/roadmap.json and documents/delivery-plan.md.</noscript>
+  <script type="application/json" id="roadmap-data">{
+  "schemaVersion": 1,
+  "title": "SafePhrase: build and understand",
+  "startDate": "2026-09-24",
+  "endDate": "2026-10-08",
+  "timezone": "Europe/Kyiv",
+  "scheduleConfirmed": true,
+  "updated": "2026-09-22",
+  "milestones": [
+    {
+      "id": "M0",
+      "title": "Choose the starting point",
+      "due": "2026-09-24",
+      "kind": "call",
+      "status": "planned",
+      "dependsOn": [],
+      "forecast": "not_assessed",
+      "forecastNote": "Download September 23; work starts September 24. Confirm call times across Kyiv/Bishkek, available study time, and device.",
+      "outcome": "Student understands the goal, owns the setup steps, and has a feasible calendar.",
+      "demo": "Explain the intended user flow and point to the next manual step; no existing application is expected.",
+      "concepts": [
+        "C# is the language; MAUI is the application framework; XAML describes the UI.",
+        "A solution groups projects; a project produces an application or library.",
+        "Generated code is a learning aid: the student still runs and explains it."
+      ],
+      "teachBack": "Which part of the application will open SMS, and who actually confirms sending?",
+      "acceptance": [
+        "Meeting dates, available time, Android device/API and speech language recorded.",
+        "Project name chosen by the student, or explicitly recorded as pending before project creation.",
+        "Student can explain the planned SOS flow and locate setup instructions."
+      ],
+      "review": "",
+      "acceptanceEvidence": [],
+      "mentorAcceptance": "",
+      "tasks": [
+        {
+          "id": "M0-1",
+          "owner": "student",
+          "title": "Confirm time, phone, language, dates, and current programming experience with the mentor",
+          "status": "pending",
+          "evidence": []
+        },
+        {
+          "id": "M0-2",
+          "owner": "agent",
+          "title": "Explain the small application structure and record kickoff decisions without changing the source specification",
+          "status": "pending",
+          "evidence": []
+        },
+        {
+          "id": "M0-3",
+          "owner": "student",
+          "title": "Choose the project name and explain project name versus visible app title",
+          "status": "pending",
+          "evidence": []
+        }
+      ]
+    },
+    {
+      "id": "M1",
+      "title": "First app and saved settings",
+      "due": "2026-09-29",
+      "kind": "call",
+      "status": "planned",
+      "dependsOn": [
+        "M0"
+      ],
+      "forecast": "not_assessed",
+      "forecastNote": "Setup and first device deployment are the main schedule uncertainty.",
+      "outcome": "The student launches their own project on Android and saves a phrase and contacts.",
+      "demo": "Launch on the phone, change the phrase/contact, restart, and show saved values. Show one manually edited label.",
+      "concepts": [
+        "XAML controls are connected to C# behavior.",
+        "Settings persist after the application closes.",
+        "Git diff shows a change; generated build files are not source code."
+      ],
+      "teachBack": "Why does a saved phrase survive a restart while an ordinary variable does not?",
+      "acceptance": [
+        "Student manually installed tools, created the named MAUI project under src, and launched it on Android.",
+        "Phrase, multiple contacts (add/edit/delete), SOS text, and channel settings persist locally.",
+        "Missing phrase/contact prevents starting Safety Mode.",
+        "Student changed a label manually and explained the relevant XAML/C# files."
+      ],
+      "review": "",
+      "acceptanceEvidence": [],
+      "mentorAcceptance": "",
+      "tasks": [
+        {
+          "id": "M1-1",
+          "owner": "student",
+          "title": "Install Visual Studio and MAUI tools, create the named project, and run it on Android using student-setup.md",
+          "status": "pending",
+          "evidence": []
+        },
+        {
+          "id": "M1-2",
+          "owner": "agent",
+          "title": "Inspect the student's scaffold; add suitable ignore rules and implement Home/Settings with local persistence and validation",
+          "status": "pending",
+          "evidence": []
+        },
+        {
+          "id": "M1-3",
+          "owner": "student",
+          "title": "Edit one UI label, run again, exercise contact CRUD, restart to verify persistence, and inspect the Git diff",
+          "status": "pending",
+          "evidence": []
+        },
+        {
+          "id": "M1-4",
+          "owner": "agent",
+          "title": "Review changes, record checks and short explanations, and prepare Tuesday evidence",
+          "status": "pending",
+          "evidence": []
+        }
+      ]
+    },
+    {
+      "id": "S1",
+      "title": "Prove offline speech early",
+      "due": "2026-09-28",
+      "kind": "internal",
+      "status": "planned",
+      "dependsOn": [
+        "M0"
+      ],
+      "entryCondition": "M1-1 must be done; settings implementation need not be finished.",
+      "forecast": "not_assessed",
+      "forecastNote": "Critical technical gate. One focused diagnosis session if the experiment fails.",
+      "outcome": "A verified speech approach on the target device, or an explicit blocker and mentor decision.",
+      "demo": "With network disabled, recognize the chosen phrase after silence and unrelated speech, stop, and repeat.",
+      "concepts": [
+        "Offline recognition means audio is processed on the device.",
+        "A speech session can finish before Safety Mode is stopped.",
+        "Device APIs can be unavailable even when the project builds."
+      ],
+      "teachBack": "Why is recognizing a phrase once different from keeping Safety Mode usable after a pause?",
+      "acceptance": [
+        "Device/API, speech package version, language availability, and repeatable results recorded.",
+        "No audio storage or online fallback in the chosen implementation; offline device behavior checked.",
+        "Silence, unrelated speech, repeat recognition, Stop, and microphone denial tested.",
+        "Foreground/lock-screen behavior agreed; unresolved failure blocks voice integration rather than being labelled success."
+      ],
+      "review": "",
+      "acceptanceEvidence": [],
+      "mentorAcceptance": "",
+      "tasks": [
+        {
+          "id": "S1-1",
+          "owner": "agent",
+          "title": "Implement a minimal offline speech experiment and inspect privacy/configuration; keep it small and reusable",
+          "status": "pending",
+          "evidence": []
+        },
+        {
+          "id": "S1-2",
+          "owner": "student",
+          "title": "Run the speech matrix on the physical phone, report outcomes, and explain offline versus online processing",
+          "status": "pending",
+          "evidence": []
+        },
+        {
+          "id": "S1-3",
+          "owner": "agent",
+          "title": "Review feasibility and session behavior; record the selected approach or concrete blocker/options for the mentor",
+          "status": "pending",
+          "evidence": []
+        }
+      ]
+    },
+    {
+      "id": "M2",
+      "title": "Complete the SOS path with a test button",
+      "due": "2026-10-01",
+      "kind": "call",
+      "status": "planned",
+      "dependsOn": [
+        "M1"
+      ],
+      "forecast": "not_assessed",
+      "forecastNote": "Can proceed while S1 is blocked; report speech feasibility at this call.",
+      "outcome": "Test SOS drives countdown, cancellation, real location, and a prepared SMS.",
+      "demo": "Cancel one countdown; complete another and inspect the SMS recipient, location link, and timestamp without sending accidentally.",
+      "concepts": [
+        "async/await keeps the UI responsive while waiting for the phone.",
+        "A state describes whether the app is idle, listening, or counting down.",
+        "Opening a message composer does not prove delivery."
+      ],
+      "teachBack": "What must happen if the location result arrives after the student pressed Cancel?",
+      "acceptance": [
+        "Five-second countdown, Cancel, and Send Now behave consistently and prevent duplicate opening.",
+        "Prepared SMS contains the selected recipient, message, real map link when available, and current timestamp.",
+        "Location denial/unavailability/timeout behavior is agreed and tested; coordinates are never fabricated.",
+        "Copy fallback works when message composition cannot be opened.",
+        "Speech gate result is available for the Thursday call, including blockers if any."
+      ],
+      "review": "",
+      "acceptanceEvidence": [],
+      "mentorAcceptance": "",
+      "tasks": [
+        {
+          "id": "M2-1",
+          "owner": "agent",
+          "title": "Resolve missing-location and recipient-selection rules with the student/mentor, then implement Test SOS, countdown, cancellation, and Send Now",
+          "status": "pending",
+          "evidence": []
+        },
+        {
+          "id": "M2-2",
+          "owner": "agent",
+          "title": "Connect geolocation, message formatting, SMS composition, and copy fallback; test meaningful pure logic and state behavior",
+          "status": "pending",
+          "evidence": []
+        },
+        {
+          "id": "M2-3",
+          "owner": "student",
+          "title": "Change the default message manually; run Cancel, permission denial, SMS preparation, and fallback checks on the phone",
+          "status": "pending",
+          "evidence": []
+        },
+        {
+          "id": "M2-4",
+          "owner": "agent",
+          "title": "Review SOS transitions and async cancellation; fix findings and prepare Thursday evidence including S1 status",
+          "status": "pending",
+          "evidence": []
+        }
+      ]
+    },
+    {
+      "id": "M3",
+      "title": "Voice-triggered flow and both channels",
+      "due": "2026-10-06",
+      "kind": "call",
+      "status": "planned",
+      "dependsOn": [
+        "S1",
+        "M2"
+      ],
+      "forecast": "not_assessed",
+      "forecastNote": "Do not hide a failed speech gate behind Test SOS.",
+      "outcome": "The real voice phrase starts the complete flow; SMS and WhatsApp are available.",
+      "demo": "Start listening, say an unrelated phrase then the trigger, cancel once, repeat, and open the chosen channel. Show Stop.",
+      "concepts": [
+        "Normalize text before comparing it.",
+        "A device event starts the same SOS flow as the test button.",
+        "Resources and pending operations must stop when Safety Mode ends."
+      ],
+      "teachBack": "Why do the voice trigger and Test SOS call the same flow instead of duplicating its code?",
+      "acceptance": [
+        "Start/Stop, visible listening state, recognized-text preview, normalized phrase matching, and voice countdown work.",
+        "Repeated detections do not create overlapping countdowns or message composers.",
+        "Agreed foreground/lock-screen behavior and restart rules work; Stop stops audio processing.",
+        "SMS and WhatsApp preparation, channel selection, recipient behavior, and missing-app fallback tested.",
+        "Student adds a small phrase-normalization test case manually and explains it.",
+        "WhatsApp opens the selected contact with encoded text, including +996 numbers and the agreed message language. The user confirms sending; recipients need no SafePhrase app. Opening the composer is not proof of delivery."
+      ],
+      "review": "",
+      "acceptanceEvidence": [],
+      "mentorAcceptance": "",
+      "tasks": [
+        {
+          "id": "M3-1",
+          "owner": "agent",
+          "title": "Integrate verified speech, normalized matching, session completion handling, Safety Mode state, and lifecycle cleanup",
+          "status": "pending",
+          "evidence": []
+        },
+        {
+          "id": "M3-2",
+          "owner": "agent",
+          "title": "Add WhatsApp click-to-chat with international phone number and URL-encoded text; offer SMS/copy alternatives and manual sending, without bots or a messaging backend",
+          "status": "pending",
+          "evidence": []
+        },
+        {
+          "id": "M3-3",
+          "owner": "student",
+          "title": "Add one normalization test case manually; exercise the full voice flow, Stop, both channels, and repeated triggers on Android",
+          "status": "pending",
+          "evidence": []
+        },
+        {
+          "id": "M3-4",
+          "owner": "agent",
+          "title": "Perform focused independent review of speech/privacy and SOS state transitions; fix findings and prepare Tuesday evidence",
+          "status": "pending",
+          "evidence": []
+        }
+      ]
+    },
+    {
+      "id": "M4",
+      "title": "Package, verify, and explain",
+      "due": "2026-10-08",
+      "kind": "call",
+      "status": "planned",
+      "dependsOn": [
+        "M3"
+      ],
+      "forecast": "not_assessed",
+      "forecastNote": "Run checks throughout development; reserve October 7-8 for final device regressions, fixes, and rehearsal. No speculative features.",
+      "outcome": "An installable APK, requirement evidence, honest limitations, and a student who can explain the app.",
+      "demo": "Install the APK, configure it, trigger and cancel SOS, repeat to prepare a message, then explain the main flow and one manual change.",
+      "concepts": [
+        "Source code, build output, and an APK are different artifacts.",
+        "Tests provide evidence for specific conditions, not a guarantee for every phone.",
+        "The student can navigate settings, speech, and SOS flow without reading every line."
+      ],
+      "teachBack": "Trace the safe phrase from its saved setting to the prepared message, naming the main responsibilities.",
+      "acceptance": [
+        "AC-01 through AC-06 and FR-01 through FR-20 traced to recorded checks; any unmet requirement explicitly recorded.",
+        "Packaged APK installs and runs on the chosen Android device; signing/build configuration and reproduction steps documented.",
+        "Final review has no unresolved blocking findings; remaining limitations are listed for mentor review and no credentials or personal contact data are committed.",
+        "Student explains the flow, performs a small change, and describes privacy, offline, foreground, and manual-send limitations."
+      ],
+      "review": "",
+      "acceptanceEvidence": [],
+      "mentorAcceptance": "",
+      "tasks": [
+        {
+          "id": "M4-1",
+          "owner": "agent",
+          "title": "Complete the requirement/check matrix, fix device regressions, and write concise build/run/limitations notes",
+          "status": "pending",
+          "evidence": []
+        },
+        {
+          "id": "M4-2",
+          "owner": "student",
+          "title": "Build with guidance, install the APK, run the acceptance scenarios, and report real device results",
+          "status": "pending",
+          "evidence": []
+        },
+        {
+          "id": "M4-3",
+          "owner": "agent",
+          "title": "Perform focused final review and relevant validation; prepare the candidate and an accurate final handoff",
+          "status": "pending",
+          "evidence": []
+        },
+        {
+          "id": "M4-4",
+          "owner": "student",
+          "title": "Rehearse the short walkthrough, explain the main responsibilities, and make one small change without generated replacement code",
+          "status": "pending",
+          "evidence": []
+        }
+      ]
+    }
+  ]
+}
+</script>
+  <script>
+  (() => {
+    const root = document.getElementById('safephrase-roadmap');
+    const data = JSON.parse(root.querySelector('#roadmap-data').textContent);
+    const get = id => root.querySelector('#roadmap-' + id);
+    const label = text => text.replaceAll('_', ' ');
+    const shortDate = iso => new Date(iso + 'T12:00:00Z').toLocaleDateString('en-GB', {day:'numeric',month:'short',timeZone:'UTC'});
+    let selected = data.milestones.find(m => m.status === 'active')?.id || data.milestones.find(m => m.status !== 'accepted')?.id || data.milestones[0].id;
+    let owner = 'all';
+    const taskCount = data.milestones.reduce((n,m) => n + m.tasks.length, 0);
+    const doneCount = data.milestones.reduce((n,m) => n + m.tasks.filter(t => t.status === 'done').length, 0);
+    get('dates').textContent = `${shortDate(data.startDate)} – ${shortDate(data.endDate)} 2026 · Tuesday / Thursday calls · ${data.timezone} · ${data.scheduleConfirmed ? 'Schedule confirmed' : 'Dates await kickoff confirmation'} · Snapshot ${data.updated}`;
+    get('progress').textContent = `${doneCount} / ${taskCount} tasks have completion evidence · ${data.milestones.filter(m => m.status === 'accepted').length} / ${data.milestones.length} checkpoints accepted`;
+    const fillList = (node, items) => { node.replaceChildren(...items.map(text => { const li = document.createElement('li'); li.textContent = text; return li; })); };
+    function render() {
+      const stage = data.milestones.find(m => m.id === selected);
+      get('navigation').replaceChildren(...data.milestones.map(m => {
+        const button = document.createElement('button'); button.type = 'button'; button.className = 'btn';
+        button.setAttribute('aria-pressed', String(m.id === selected));
+        button.setAttribute('aria-label', `${m.id}: ${m.title}, ${shortDate(m.due)}, ${label(m.status)}`);
+        const top = document.createElement('span'); top.className = 'milestone-label'; top.textContent = `${m.id} · ${shortDate(m.due)}${m.kind === 'internal' ? ' · internal' : ''}`;
+        const title = document.createElement('span'); title.className = 'milestone-label'; title.textContent = m.title;
+        button.append(top, title); button.addEventListener('click', () => { selected = m.id; render(); get('navigation').querySelector(`[aria-pressed="true"]`).focus(); save(); }); return button;
+      }));
+      get('stage-title').textContent = `${stage.id} — ${stage.title}`;
+      const entries = [`${stage.kind === 'call' ? 'Call' : 'Internal gate'}: ${shortDate(stage.due)}`, `Status: ${label(stage.status)}`, `Depends on: ${stage.dependsOn.join(', ') || 'none'}`];
+      if (stage.entryCondition) entries.push(stage.entryCondition);
+      get('stage-meta').replaceChildren(...entries.map(text => {const span = document.createElement('span');span.textContent = text;return span;}));
+      get('outcome').textContent = stage.outcome; get('demo').textContent = stage.demo;
+      get('forecast').textContent = `Forecast: ${label(stage.forecast)}. ${stage.forecastNote}`;
+      const tasks = stage.tasks.filter(t => owner === 'all' || t.owner === owner);
+      get('tasks').replaceChildren(...tasks.map(task => {
+        const li = document.createElement('li'); const title = document.createElement('span'); title.textContent = `${task.id} · ${task.title}`;
+        const meta = document.createElement('span'); meta.className = 'task-meta text-small'; meta.textContent = `${task.owner === 'student' ? 'Student · manual' : 'Agent'} · ${label(task.status)}`;
+        li.append(title,meta);
+        if (task.evidence.length) { const evidence = document.createElement('ul'); fillList(evidence,task.evidence); li.append(evidence); }
+        return li;
+      }));
+      if (!tasks.length) {const li = document.createElement('li');li.textContent = 'No tasks for this role in this milestone.';get('tasks').append(li);}
+      fillList(get('concepts'),stage.concepts); get('question').textContent = stage.teachBack;
+      fillList(get('acceptance'),stage.acceptance); get('review').textContent = 'Review: ' + (stage.review || 'Not recorded');
+      fillList(get('evidence'),stage.acceptanceEvidence); get('mentor').textContent = 'Mentor acceptance: ' + (stage.mentorAcceptance || 'Not recorded');
+      get('owner').value = owner;
+    }
+    function save() {
+      if (window.openai?.setWidgetState) window.openai.setWidgetState({modelContent:{milestone:selected,role:owner},privateContent:null}).catch(() => {});
+    }
+    function restore(state) {
+      const saved = state?.modelContent;
+      if (saved && data.milestones.some(m => m.id === saved.milestone)) selected = saved.milestone;
+      if (saved && ['all','student','agent'].includes(saved.role)) owner = saved.role;
+    }
+    get('owner').addEventListener('change', event => {owner = event.target.value;render();save();});
+    restore(window.openai?.widgetState); render();
+    window.addEventListener('openai:set_globals', event => {restore(event.detail?.globals?.widgetState);render();});
+  })();
+  </script>
+</div>
+
+</main></body></html>
