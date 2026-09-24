@@ -40,3 +40,17 @@ Resolved by the messaging clarification below: retain external WhatsApp/SMS comp
 - Keep integration small: WhatsApp is the selected messenger, with SMS as the second channel and copy fallback. SMS may be implemented first to exercise the shared SOS flow; development order does not change final scope.
 - Open the external composer with a selected recipient and SOS text; the user confirms sending. The recipient uses ordinary WhatsApp/SMS and does not install SafePhrase. No SafePhrase-to-SafePhrase messaging, SignalR, polling, backend, bots, Business API, or delivery tracking is required.
 - Other messengers, including Telegram, are deferred rather than added to the two-week acceptance scope.
+
+## 2026-09-23 Student kickoff information
+
+- Student-selected initial test device: their current POCO C65. Installed Android version and on-device speech support remain unverified. This is a test-device choice, not a restriction to one phone model.
+- Student-selected spoken phrase language: English. This does not independently select the UI or SOS message language.
+- Student clarified with a screenshot that the installed editor is Visual Studio Code, not Visual Studio, and Visual Studio Installer is absent. The previous IDE report was a naming misunderstanding. Visual Studio Community with MAUI still needs manual installation. Student has some C++ experience from competitive programming; toolchain readiness remains unverified.
+- Student reports about one hour of study daily, with up to 3-4 hours when free on weekends.
+- City/timezone, call times, explicit confirmation of meeting dates, project name, and test-recipient WhatsApp availability remain pending. The approved delivery dates are unchanged.
+
+## 2026-09-23 Manual project creation
+
+- Superseding the earlier setup state: the student installed Visual Studio Community 2026 with MAUI and manually created `SafePhrase` under `src/SafePhrase/`. Screenshots show installer version 18.10.2, the MAUI template, and .NET 10 selected.
+- Local files confirm `SafePhrase.csproj`, `SafePhrase.slnx`, namespace/title `SafePhrase`, Android target `net10.0-android`, and the default counter. The application ID remains the template placeholder `com.companyname.safephrase`; a distribution identity is not agreed yet.
+- Opening the project is verified; successful restore/build, SDK version, Android deployment, and learning checks remain unverified. Keep the template for the first device run.

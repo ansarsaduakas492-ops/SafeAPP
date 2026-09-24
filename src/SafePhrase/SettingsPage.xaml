@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="SafePhrase.SettingsPage"
+             Title="Settings">
+    <ScrollView>
+        <VerticalStackLayout Padding="24" Spacing="16">
+            <Label Text="Safety settings" Style="{StaticResource Headline}"
+                   SemanticProperties.HeadingLevel="Level1" />
+            <Label Text="Safe phrase" />
+            <Entry x:Name="PhraseEntry" Placeholder="Words you will say" MaxLength="100" />
+            <Label Text="SOS message" />
+            <Editor x:Name="MessageEditor" AutoSize="TextChanges" HeightRequest="110" />
+            <Label Text="Preferred channel" />
+            <Picker x:Name="ChannelPicker" Title="Choose a channel">
+                <Picker.Items>
+                    <x:String>WhatsApp</x:String>
+                    <x:String>SMS</x:String>
+                </Picker.Items>
+            </Picker>
+            <Button Text="Save settings" Clicked="OnSaveSettingsClicked" />
+            <Label Text="Trusted contacts" Style="{StaticResource SubHeadline}" />
+            <VerticalStackLayout x:Name="ContactsLayout" Spacing="10" />
+            <Label Text="Contact name (optional)" />
+            <Entry x:Name="NameEntry" Placeholder="For example, Mom" MaxLength="60" />
+            <Label Text="Phone number" />
+            <Entry x:Name="PhoneEntry" Placeholder="+996..." Keyboard="Telephone" MaxLength="24" />
+            <Button x:Name="ContactSaveButton" Text="Add contact" Clicked="OnSaveContactClicked" />
+            <Button x:Name="CancelEditButton" Text="Cancel edit" IsVisible="False" Clicked="OnCancelEditClicked" />
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

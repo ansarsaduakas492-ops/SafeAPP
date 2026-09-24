@@ -49,17 +49,17 @@ body{margin:0;background:var(--background);color:var(--foreground);font:400 var(
   "endDate": "2026-10-08",
   "timezone": "Europe/Kyiv",
   "scheduleConfirmed": true,
-  "updated": "2026-09-22",
+  "updated": "2026-09-24",
   "milestones": [
     {
       "id": "M0",
       "title": "Choose the starting point",
       "due": "2026-09-24",
       "kind": "call",
-      "status": "planned",
+      "status": "active",
       "dependsOn": [],
       "forecast": "not_assessed",
-      "forecastNote": "Download September 23; work starts September 24. Confirm call times across Kyiv/Bishkek, available study time, and device.",
+      "forecastNote": "The MAUI template now runs on the student's Android 15/API 35 POCO C65, and a screenshot shows the counter at 25. Call time/timezone and student teach-back remain pending. Forecast is not yet assessed until the September 24 checkpoint is confirmed; delivery dates are unchanged.",
       "outcome": "Student understands the goal, owns the setup steps, and has a feasible calendar.",
       "demo": "Explain the intended user flow and point to the next manual step; no existing application is expected.",
       "concepts": [
@@ -81,22 +81,25 @@ body{margin:0;background:var(--background);color:var(--foreground);font:400 var(
           "id": "M0-1",
           "owner": "student",
           "title": "Confirm time, phone, language, dates, and current programming experience with the mentor",
-          "status": "pending",
-          "evidence": []
+          "status": "doing",
+          "evidence": [
+            "2026-09-23 student report: POCO C65; English spoken phrase; some competitive-programming experience in C++; one hour daily and up to 3-4 hours on free weekends. Follow-up screenshot and clarification: only Visual Studio Code is installed; Visual Studio Installer is absent.",
+            "Phone screenshots confirm Android 15/API 35 and OS 2.0.208.0. Still pending: city/timezone, agreed call times/dates, and mentor confirmation."
+          ]
         },
         {
           "id": "M0-2",
           "owner": "agent",
           "title": "Explain the small application structure and record kickoff decisions without changing the source specification",
-          "status": "pending",
-          "evidence": []
+          "status": "done",
+          "evidence": ["2026-09-24 agent explained the one-project structure in chat: MainPage.xaml holds the starter screen, MainPage.xaml.cs handles the button, and SafePhrase.csproj holds build settings. Existing kickoff decisions are recorded in project-decisions.md; source specification was not changed."]
         },
         {
           "id": "M0-3",
           "owner": "student",
           "title": "Choose the project name and explain project name versus visible app title",
-          "status": "pending",
-          "evidence": []
+          "status": "doing",
+          "evidence": ["2026-09-23: student chose SafePhrase in the wizard; local project and ApplicationTitle confirm the name. Explanation of project name versus visible title is still pending."]
         }
       ]
     },
@@ -110,7 +113,7 @@ body{margin:0;background:var(--background);color:var(--foreground);font:400 var(
         "M0"
       ],
       "forecast": "not_assessed",
-      "forecastNote": "Setup and first device deployment are the main schedule uncertainty.",
+      "forecastNote": "First Android run and the student's manual label edit were observed. Home/Settings source compiles for Android, but full package build is blocked by a file lock in shared obj output, and the new screens await a phone check. September 29 forecast depends on device results and the outstanding call schedule.",
       "outcome": "The student launches their own project on Android and saves a phrase and contacts.",
       "demo": "Launch on the phone, change the phrase/contact, restart, and show saved values. Show one manually edited label.",
       "concepts": [
@@ -133,22 +136,22 @@ body{margin:0;background:var(--background);color:var(--foreground);font:400 var(
           "id": "M1-1",
           "owner": "student",
           "title": "Install Visual Studio and MAUI tools, create the named project, and run it on Android using student-setup.md",
-          "status": "pending",
-          "evidence": []
+          "status": "done",
+          "evidence": ["2026-09-23 student installed Visual Studio/MAUI and manually created src/SafePhrase targeting net10.0-android. Student-provided build log confirmed a signed debug APK. After enabling phone installation over USB, a student screenshot showed the default MAUI app running on POCO C65 with counter text 'Clicked 25 times'. Android 15/API 35 and OS 2.0.208.0 were observed. This proves the first Android run and button interaction; it does not prove other project behavior or mentor acceptance."]
         },
         {
           "id": "M1-2",
           "owner": "agent",
           "title": "Inspect the student's scaffold; add suitable ignore rules and implement Home/Settings with local persistence and validation",
-          "status": "pending",
-          "evidence": []
+          "status": "done",
+          "evidence": ["2026-09-24 agent preserved the student's 'SafePhrase is ready' label and added Home/Settings UI, local Preferences persistence, phrase/message validation, and add/edit/delete for trusted contacts. Existing .gitignore already covers generated bin/obj files. Android Compile target succeeds with zero errors/warnings. Full package build returned XALNS7024 because a shared obj assembly was in use by another process.", "2026-09-24 student reports that the updated app works on the phone, settings save, contacts can be added, edited, and deleted, and settings remain after app restart. This is student-reported physical-device evidence; mentor acceptance remains pending."]
         },
         {
           "id": "M1-3",
           "owner": "student",
           "title": "Edit one UI label, run again, exercise contact CRUD, restart to verify persistence, and inspect the Git diff",
-          "status": "pending",
-          "evidence": []
+          "status": "doing",
+          "evidence": ["2026-09-24 student changed the XAML label to 'SafePhrase is ready', reported that it appears on the phone, and correctly observed that the counter behavior did not change. Contact CRUD, persistence after restart, and Git diff are still pending."]
         },
         {
           "id": "M1-4",
@@ -164,7 +167,7 @@ body{margin:0;background:var(--background);color:var(--foreground);font:400 var(
       "title": "Prove offline speech early",
       "due": "2026-09-28",
       "kind": "internal",
-      "status": "planned",
+      "status": "active",
       "dependsOn": [
         "M0"
       ],
@@ -193,15 +196,15 @@ body{margin:0;background:var(--background);color:var(--foreground);font:400 var(
           "id": "S1-1",
           "owner": "agent",
           "title": "Implement a minimal offline speech experiment and inspect privacy/configuration; keep it small and reusable",
-          "status": "pending",
-          "evidence": []
+            "status": "done",
+            "evidence": ["2026-09-24 agent added a separate Android offline-speech experiment page using Android SpeechRecognizer.CreateOnDeviceSpeechRecognizer, which explicitly creates an on-device recognizer with no online fallback. The page queries Android 13+ support for the en-US offline model, requests microphone permission only when Listen is tapped, runs a single en-US recognition session, shows partial/final text and errors, offers cancellation, and destroys the recognizer when leaving. Android manifest declares RECORD_AUDIO and the recognition-service query. Android compile target passed with 0 warnings and 0 errors. Device/language/offline behavior is not yet verified."]
         },
         {
           "id": "S1-2",
           "owner": "student",
           "title": "Run the speech matrix on the physical phone, report outcomes, and explain offline versus online processing",
-          "status": "pending",
-          "evidence": []
+          "status": "doing",
+          "evidence": ["2026-09-24 student first reported `LanguageUnavailable` for en-US using the explicit on-device recognizer; Android defines this as a supported language currently unavailable, such as a model not yet downloaded. HyperOS Settings search did not expose an on-device model menu, so agent added an in-app Android 13+ support check and model-download request. Student now reports that English speech recognition works in the updated app. Whether it works with all network connectivity disabled, repeated sessions, silence/unrelated speech, and Stop remains unverified."]
         },
         {
           "id": "S1-3",

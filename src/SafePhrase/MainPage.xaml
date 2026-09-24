@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="SafePhrase.MainPage"
+             Title="Home">
+    <ScrollView>
+        <VerticalStackLayout Padding="24" Spacing="18">
+            <Label Text="SafePhrase is ready"
+                   Style="{StaticResource Headline}"
+                   SemanticProperties.HeadingLevel="Level1" />
+            <Label Text="Set up your phrase and trusted contacts before using Safety Mode." />
+            <Label x:Name="SetupStatusLabel" Text="Checking settings..." />
+            <Button Text="Settings" Clicked="OnSettingsClicked" />
+            <Button Text="Offline speech test" Clicked="OnOfflineSpeechTestClicked" />
+            <Button Text="Start Safety Mode" IsEnabled="False" />
+            <Label Text="Voice activation is not available yet. Do not rely on this prototype for emergencies."
+                   FontSize="13" />
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>
