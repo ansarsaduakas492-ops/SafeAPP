@@ -86,3 +86,65 @@ Append compact entries; do not paste transcripts or full command output. Include
 - First phone speech result: student reports `LanguageUnavailable` for en-US through the explicit on-device recognizer. Android documents this result as a supported language that is currently unavailable, for example because its model has not been downloaded. Offline recognition has not passed yet; next the student checks/downloads English on-device speech in phone settings and retries.
 - Settings follow-up: screenshots showed that HyperOS search opens Google text-to-speech and Assistant voice preferences, not an offline model manager. The app now queries Android 13+ for installed/downloadable en-US models and requests a model download through the system recognizer when available. Android Compile target passes with zero warnings/errors. Next: student runs the updated app, taps Check / prepare English offline model, follows any system prompt, and reports the status.
 - Student now reports that English speech recognition works in the app. This verifies a first successful one-session recognition on the physical phone through the explicit on-device recognizer. Network-offline operation, repeated sessions, silence/unrelated speech, and Stop are still unverified; the speech gate remains active.
+
+## 2026-09-27 — new-day speech gate review
+
+- Local `main` is clean at `6a64a7e` and tracks `origin/main`; this supersedes the older handoff's no-commit/no-push statement. This session made a new uncommitted speech-page fix only; no commit or push was made here.
+- S1-3 is doing: reviewed the on-device recognizer path and guarded callbacks from earlier sessions. Stop now destroys the recognizer; late callbacks cannot replace its cancelled status or alter a newer session. Android Compile passed with zero warnings/errors, and `git diff --check` passed.
+- S1 forecast is at risk for the September 28 internal gate because network-off operation and the remaining phone matrix are unverified. Student's first task today is one network-off recognition attempt; then test repeat, silence/unrelated speech, Stop, and microphone denial in short steps. No Safety Mode or production voice feasibility claim yet.
+
+## 2026-09-27 — M1 agent review
+
+- Reviewed Home/Settings source against the starter template and recorded M1-4 done. Review covered required phrase/message validation, international-number normalization and duplicate rejection, contact add/edit/delete flow, confirmation before deletion, and Preferences-backed local persistence. No blocking source issue found. No new build was run; prior Android Compile evidence remains recorded under M1-2.
+- Corrected M1-3 evidence to include the student's earlier report that contact CRUD and settings persistence work on the phone. The student's Git diff review/explanation is still open, so M1 and its dependent M2 are not ready to advance. M1 forecast is at risk before the September 29 checkpoint; M0 schedule/teach-back details also remain open.
+- Student reports successful English speech recognition with Wi-Fi disabled on POCO C65 (Android 15/API 35). Recorded as a successful offline session. Mobile data state and repeat/silence/unrelated speech/Stop/microphone-denial outcomes were not specified and remain unverified; S1 remains active and at risk for September 28.
+- Completed S1-3 agent review: the explicit on-device Android recognizer is a promising candidate, but it is not ready for Safety Mode until physical-device restart, Stop, silence/unrelated speech, and microphone-denial behavior are verified. This review does not mark the speech gate accepted; S1-2 remains doing.
+
+## 2026-09-27 — student requested faster agent-led progress
+
+- At the student's explicit request, agent inspected the M1 source diff and closed M1-3 using the student's prior device reports plus the agent's Git diff review. The student asked to defer file-by-file explanations; no learning completion is claimed. M0 logistics remain unresolved, so M1 is not marked accepted.
+- Started M2 code at the student's direction. Added a Home Test SOS route, five-second countdown, Cancel and Send Now, best-effort geolocation with a five-second timeout, timestamped map-link/message formatting, SMS composition addressed to all saved contacts, and a copy fallback. The message composer requires the student to review and press Send; no delivery is claimed.
+- Added Android location permissions and SMS composer package visibility. Android Compile passed with zero warnings/errors. Device checks remain pending. WhatsApp multi-recipient composition is not implemented; each WhatsApp handoff must be per contact. The screen-lock/background listening preference remains unimplemented pending mentor review because it conflicts with the reference scope/NFR-03 and current Android microphone-service restrictions.
+
+## 2026-09-27 — WhatsApp message prefill fix
+
+- Student reported that SMS included the SOS text but the WhatsApp flow opened without it. Root cause: Test SOS was still hard-wired to SMS and did not pass encoded text to a WhatsApp link.
+- Added selected-channel routing. WhatsApp now opens one saved contact per `wa.me/<digits>?text=<encoded text>` link and offers a next-contact button; SMS still opens for all contacts. If WhatsApp cannot open, the student can choose SMS or copy. A failed SMS attempt offers copy without retrying SMS.
+- Each message contains the saved SOS text, best-effort location (or an explicit unavailable notice), and timestamp. User still reviews and sends manually; app cannot confirm delivery.
+- Android Compile passed with zero warnings/errors; `git diff --check` passed. Physical WhatsApp prefill and recipient checks are pending and recorded under M3-3; no delivery is claimed. Roadmap statuses updated for M2 and the early M3-2 code work.
+
+## 2026-10-01 — repository analysis and continuation forecast
+
+- GitHub commits API confirmed latest published commit 6a64a7e dated September 24, matching local HEAD. September 27 SOS additions remain uncommitted. No application source changes, commit, or push made today.
+- Inspected settings persistence/validation, SOS countdown/channel/message code and speech callback diff. Current git diff --check passed; prior Compile results were reused, not rerun. Device behavior remains unverified, including corrected WhatsApp prefill and unavailable-app fallback.
+- September 28 S1 gate is overdue in recorded evidence. Updated S1/M2/M3/M4 forecasts, preserving dates and completion statuses. October 1 checkpoint lacks required phone checks; October 6 voice and October 8 APK targets are at risk.
+- Continuation: validate current WhatsApp/SMS/countdown on phone, finish S1-2 and lifecycle agreement, then integrate foreground voice Safety Mode and perform focused review. Final APK installation and requirement acceptance remain separate student/mentor checks.
+
+- 2026-10-01 student reports Test SOS countdown cancellation works after the requested phone check. M2-3 is doing; remaining device checks are pending. Next: inspect WhatsApp recipient and prefilled message without sending.
+
+- 2026-10-01 student reports WhatsApp prepared-message flow works and Send Now check succeeded. These are student-reported phone results, not independently observed delivery. M2-3 remains doing; next check is SMS composition.
+
+- 2026-10-01 student reports SMS flow works; chooser was identified by the student as Android UI. No independently confirmed recipient receipt. Next: denied-location SOS check; M2-3 remains doing.
+
+- 2026-10-01 student confirms denied-location SOS displays Location unavailable. M2-3 remains doing pending copy fallback and manual message edit. Next independent check: S1-2 recognition with both Wi-Fi and mobile data disabled.
+
+- 2026-10-01 student reports recognition works after airplane-mode/Wi-Fi-off instructions. After silence the session ended; one manual Listen restart recognized correctly. S1-2 remains doing pending repeated attempts, unrelated speech, Stop and microphone denial. Automatic restart is future Safety Mode work.
+
+## 2026-10-01 — phrase matching preparation
+
+- Student confirms Stop and restart checks succeeded. Remaining S1/M2 checks are not marked complete.
+- User requested the next implementation stage. Added SafePhraseMatcher and a package-free logic check executable under src/SafePhrase.LogicChecks; dotnet run passed 11 meaningful cases. Matching ignores case/punctuation and normalizes whitespace, rejects empty/partial matches.
+- Voice integration remains pending technical prerequisites and an explicit foreground/lock lifecycle decision, requested from the student. Existing source changes preserved; no commit or push.
+
+## 2026-10-01 — experimental background Safety Mode implemented
+
+- User explicitly authorized background mode without waiting for mentor approval; extension recorded in project-decisions.md without editing source specification. Remaining manual acceptance is not waived or marked complete.
+- Added user-started Android microphone foreground service with ongoing notification/Stop; explicitly on-device en-US sessions restart after silence/nonmatching results. Fatal/repeated errors stop; no boot/process-death microphone restart, stored audio or transcripts. Background detection is a notification handoff to the existing countdown after app return, not unattended delivery.
+- Focused independent review found four issues: countdown launching after pause, queued recognition after Stop, lost detection after process death, and routing only from Home. Fixed with visibility guards/countdown cancellation, synchronous StopRequested gate, persisted pending detection and Shell routing; reviewer confirmed all four source findings resolved.
+- Android Compile and full debug APK build passed with 0 warnings/errors. Generated manifest declares non-exported microphone service and required permissions. Signed debug APK exists in ignored bin output. All 11 phrase logic checks and git diff --check passed. No phone/background success is claimed.
+- M3-1 doing, M3 active for user-authorized experiment; S1/M2 remaining evidence and milestone readiness/mentor acceptance remain open. Next: student installs updated build, saves an English phrase, starts mode with mic/notification permission, then checks locked-screen detection notification. October 8 remains at risk.
+
+## 2026-10-02 — authorized commit and push
+
+- User explicitly requested commit and push to their SafeAPP repository. Verified main tracks origin/main with matching branch names; remote main was 6a64a7e before publication.
+- Include source, logic checks and tracking; exclude ignored APK/bin/obj output. Reused October 1 build/review evidence because application source has not changed since those checks. Current diff whitespace check passes. No new phone results or milestone acceptance claimed.

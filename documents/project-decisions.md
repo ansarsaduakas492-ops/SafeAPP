@@ -41,6 +41,16 @@ Resolved by the messaging clarification below: retain external WhatsApp/SMS comp
 - Open the external composer with a selected recipient and SOS text; the user confirms sending. The recipient uses ordinary WhatsApp/SMS and does not install SafePhrase. No SafePhrase-to-SafePhrase messaging, SignalR, polling, backend, bots, Business API, or delivery tracking is required.
 - Other messengers, including Telegram, are deferred rather than added to the two-week acceptance scope.
 
+## 2026-09-27 Student request for behavior changes
+
+- Recipient preference: prepare SOS for all saved trusted contacts. External composers still require the user to press Send; the app must not claim delivery. WhatsApp click-to-chat addresses one recipient per link, so the all-contact flow needs an explicit sequential/manual design before implementation.
+- Missing-location preference: continue the SOS flow without a map link and clearly state that location is unavailable. This changes the reference specification's location-denial behavior and needs mentor review before acceptance evidence is finalized.
+- Screen-lock/background preference: keep Safety Mode active until the student explicitly stops it, including while the screen is locked. This conflicts with `functional-specification.md` scope/NFR-03, which excludes continuous background listening, and requires mentor approval before implementation. Android microphone use in the background also requires additional platform work and has runtime restrictions; feasibility is not established by the one-session offline speech experiment.
+
+## 2026-09-27 Student-directed workflow change
+
+- Student explicitly asked the agent to perform remaining source/diff reviews, update task tracking, and continue implementation without waiting for file-by-file explanations. The agent may complete source-review tasks on the student's behalf, while recording who performed each action. Do not claim unreported phone checks or learning explanations as completed. Physical-device results remain student-reported evidence.
+
 ## 2026-09-23 Student kickoff information
 
 - Student-selected initial test device: their current POCO C65. Installed Android version and on-device speech support remain unverified. This is a test-device choice, not a restriction to one phone model.
@@ -54,3 +64,19 @@ Resolved by the messaging clarification below: retain external WhatsApp/SMS comp
 - Superseding the earlier setup state: the student installed Visual Studio Community 2026 with MAUI and manually created `SafePhrase` under `src/SafePhrase/`. Screenshots show installer version 18.10.2, the MAUI template, and .NET 10 selected.
 - Local files confirm `SafePhrase.csproj`, `SafePhrase.slnx`, namespace/title `SafePhrase`, Android target `net10.0-android`, and the default counter. The application ID remains the template placeholder `com.companyname.safephrase`; a distribution identity is not agreed yet.
 - Opening the project is verified; successful restore/build, SDK version, Android deployment, and learning checks remain unverified. Keep the template for the first device run.
+
+## 2026-09-27 WhatsApp recipient behavior
+
+- Student clarified that SOS should be prepared for every saved trusted contact. WhatsApp click-to-chat supports one recipient per link, so SafePhrase opens one prefilled chat at a time and the student returns to open the next. The student presses Send in WhatsApp for each contact. SMS continues to use one composer addressed to all saved contacts. The app cannot confirm delivery.
+- The student reported that the WhatsApp message was blank while SMS contained the message. The agent added encoded message text to the WhatsApp click-to-chat URL; phone verification remains pending.
+
+## 2026-10-01 — user-authorized background listening extension
+
+- The student explicitly requested background Safety Mode and instructed the agent not to wait for mentor approval. This supersedes the earlier approval prerequisite for implementation; it does not constitute device verification or mentor acceptance.
+- This is an agreed extension beyond functional-specification.md NFR-03/out-of-scope. Keep the source transcription unchanged. Implement a user-started microphone foreground service with a visible notification and Stop action. Start it while the app is visible; no boot auto-start, hidden recording, or online fallback.
+- Experimental en-US recognition restarts sessions after silence/nonmatching speech. Android documents SpeechRecognizer as unsuitable for continuous recognition; the POCO locked-screen experiment determines feasibility, battery impact and interruptions. Do not claim dependable continuous protection.
+- Foreground phrase detection opens the existing SOS countdown. Background/locked-screen detection stops listening and posts a notification; tap/unlock/return opens the countdown. Android background-activity restrictions and manual sending remain in effect; no unattended WhatsApp/SMS delivery is implemented.
+- Stop and service destruction invalidate callbacks. Fatal/repeated recognizer errors stop visibly. Removing the app from recent apps stops listening; process death does not automatically restart the microphone. A pending detection persists without audio or transcript storage.
+- This scope increases October 8 delivery risk. Required acceptance checks remain open; dates are unchanged.
+
+Sources: https://developer.android.com/develop/background-work/services/fgs/service-types ; https://developer.android.com/develop/background-work/services/fgs/restrictions-bg-start ; https://developer.android.com/guide/components/activities/secure-bal ; https://developer.android.com/reference/android/speech/SpeechRecognizer

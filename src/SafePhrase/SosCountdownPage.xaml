@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="SafePhrase.SosCountdownPage"
+             Title="Test SOS">
+    <VerticalStackLayout Padding="24" Spacing="18" VerticalOptions="Center">
+        <Label Text="Test SOS" Style="{StaticResource Headline}"
+               SemanticProperties.HeadingLevel="Level1" />
+        <Label Text="This test prepares a message using your selected channel. SafePhrase will not send it; review and press Send in the other app." />
+        <Label x:Name="CountdownLabel" Text="Preparing SOS..." FontSize="22" HorizontalTextAlignment="Center" />
+        <Label x:Name="StatusLabel" Text="Trying to get the current location..." />
+        <Button x:Name="CancelButton" Text="Cancel" Clicked="OnCancelClicked" />
+        <Button x:Name="SendNowButton" Text="Send Now" Clicked="OnSendNowClicked" />
+        <Button x:Name="NextWhatsAppButton" Text="Open next WhatsApp contact" Clicked="OnNextWhatsAppClicked" IsVisible="False" />
+        <Button x:Name="DoneButton" Text="Return to Home" Clicked="OnDoneClicked" IsVisible="False" />
+    </VerticalStackLayout>
+</ContentPage>

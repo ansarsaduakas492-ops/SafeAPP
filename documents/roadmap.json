@@ -5,7 +5,7 @@
   "endDate": "2026-10-08",
   "timezone": "Europe/Kyiv",
   "scheduleConfirmed": true,
-  "updated": "2026-09-24",
+  "updated": "2026-10-02",
   "milestones": [
     {
       "id": "M0",
@@ -48,14 +48,18 @@
           "owner": "agent",
           "title": "Explain the small application structure and record kickoff decisions without changing the source specification",
           "status": "done",
-          "evidence": ["2026-09-24 agent explained the one-project structure in chat: MainPage.xaml holds the starter screen, MainPage.xaml.cs handles the button, and SafePhrase.csproj holds build settings. Existing kickoff decisions are recorded in project-decisions.md; source specification was not changed."]
+          "evidence": [
+            "2026-09-24 agent explained the one-project structure in chat: MainPage.xaml holds the starter screen, MainPage.xaml.cs handles the button, and SafePhrase.csproj holds build settings. Existing kickoff decisions are recorded in project-decisions.md; source specification was not changed."
+          ]
         },
         {
           "id": "M0-3",
           "owner": "student",
           "title": "Choose the project name and explain project name versus visible app title",
           "status": "doing",
-          "evidence": ["2026-09-23: student chose SafePhrase in the wizard; local project and ApplicationTitle confirm the name. Explanation of project name versus visible title is still pending."]
+          "evidence": [
+            "2026-09-23: student chose SafePhrase in the wizard; local project and ApplicationTitle confirm the name. Explanation of project name versus visible title is still pending."
+          ]
         }
       ]
     },
@@ -64,12 +68,12 @@
       "title": "First app and saved settings",
       "due": "2026-09-29",
       "kind": "call",
-      "status": "planned",
+      "status": "active",
       "dependsOn": [
         "M0"
       ],
-      "forecast": "not_assessed",
-      "forecastNote": "First Android run and the student's manual label edit were observed. Home/Settings source compiles for Android, but full package build is blocked by a file lock in shared obj output, and the new screens await a phone check. September 29 forecast depends on device results and the outstanding call schedule.",
+      "forecast": "at_risk",
+      "forecastNote": "Student reports Home/Settings, contact add/edit/delete, and persistence working on the phone. Agent reviewed the Git diff at the student's request. File-by-file explanation was waived for now by the student; M0 city/timezone and call schedule remain open, so milestone acceptance is not claimed.",
       "outcome": "The student launches their own project on Android and saves a phrase and contacts.",
       "demo": "Launch on the phone, change the phrase/contact, restart, and show saved values. Show one manually edited label.",
       "concepts": [
@@ -82,9 +86,9 @@
         "Student manually installed tools, created the named MAUI project under src, and launched it on Android.",
         "Phrase, multiple contacts (add/edit/delete), SOS text, and channel settings persist locally.",
         "Missing phrase/contact prevents starting Safety Mode.",
-        "Student changed a label manually and explained the relevant XAML/C# files."
+        "Student changed a label manually; agent reviewed the source diff at the student's explicit request. File-by-file explanation was waived for now; no learning completion is claimed."
       ],
-      "review": "",
+      "review": "2026-09-27 local source review completed against 0737d02; no blocking Home/Settings findings. M1-3 diff review was performed by the agent at the student's explicit request. M0 call logistics remain open; mentor acceptance is pending.",
       "acceptanceEvidence": [],
       "mentorAcceptance": "",
       "tasks": [
@@ -93,28 +97,39 @@
           "owner": "student",
           "title": "Install Visual Studio and MAUI tools, create the named project, and run it on Android using student-setup.md",
           "status": "done",
-          "evidence": ["2026-09-23 student installed Visual Studio/MAUI and manually created src/SafePhrase targeting net10.0-android. Student-provided build log confirmed a signed debug APK. After enabling phone installation over USB, a student screenshot showed the default MAUI app running on POCO C65 with counter text 'Clicked 25 times'. Android 15/API 35 and OS 2.0.208.0 were observed. This proves the first Android run and button interaction; it does not prove other project behavior or mentor acceptance."]
+          "evidence": [
+            "2026-09-23 student installed Visual Studio/MAUI and manually created src/SafePhrase targeting net10.0-android. Student-provided build log confirmed a signed debug APK. After enabling phone installation over USB, a student screenshot showed the default MAUI app running on POCO C65 with counter text 'Clicked 25 times'. Android 15/API 35 and OS 2.0.208.0 were observed. This proves the first Android run and button interaction; it does not prove other project behavior or mentor acceptance."
+          ]
         },
         {
           "id": "M1-2",
           "owner": "agent",
           "title": "Inspect the student's scaffold; add suitable ignore rules and implement Home/Settings with local persistence and validation",
           "status": "done",
-          "evidence": ["2026-09-24 agent preserved the student's 'SafePhrase is ready' label and added Home/Settings UI, local Preferences persistence, phrase/message validation, and add/edit/delete for trusted contacts. Existing .gitignore already covers generated bin/obj files. Android Compile target succeeds with zero errors/warnings. Full package build returned XALNS7024 because a shared obj assembly was in use by another process.", "2026-09-24 student reports that the updated app works on the phone, settings save, contacts can be added, edited, and deleted, and settings remain after app restart. This is student-reported physical-device evidence; mentor acceptance remains pending."]
+          "evidence": [
+            "2026-09-24 agent preserved the student's 'SafePhrase is ready' label and added Home/Settings UI, local Preferences persistence, phrase/message validation, and add/edit/delete for trusted contacts. Existing .gitignore already covers generated bin/obj files. Android Compile target succeeds with zero errors/warnings. Full package build returned XALNS7024 because a shared obj assembly was in use by another process.",
+            "2026-09-24 student reports that the updated app works on the phone, settings save, contacts can be added, edited, and deleted, and settings remain after app restart. This is student-reported physical-device evidence; mentor acceptance remains pending."
+          ]
         },
         {
           "id": "M1-3",
           "owner": "student",
           "title": "Edit one UI label, run again, exercise contact CRUD, restart to verify persistence, and inspect the Git diff",
-          "status": "doing",
-          "evidence": ["2026-09-24 student changed the XAML label to 'SafePhrase is ready', reported that it appears on the phone, and correctly observed that the counter behavior did not change. Contact CRUD, persistence after restart, and Git diff are still pending."]
+          "status": "done",
+          "evidence": [
+            "2026-09-24 student changed the XAML label to 'SafePhrase is ready', reported that it appears on the phone, and correctly observed that the counter behavior did not change.",
+            "2026-09-24 student reported that contacts can be added, edited, and deleted, and that settings remain after restarting the app.",
+            "2026-09-27, at the student's explicit request, agent inspected the source diff from 0737d02 to 6a64a7e and confirmed the intended Home/Settings source changes and manual label. No generated build output was part of that source review. Student requested to defer file-by-file explanations; no teach-back completion is claimed."
+          ]
         },
         {
           "id": "M1-4",
           "owner": "agent",
           "title": "Review changes, record checks and short explanations, and prepare Tuesday evidence",
-          "status": "pending",
-          "evidence": []
+          "status": "done",
+          "evidence": [
+            "2026-09-27 agent reviewed the Home/Settings XAML, code-behind, settings model/store, and project changes against the starter template. The flow validates required phrase/message fields, normalizes international contact numbers, prevents duplicate normalized numbers, confirms deletions, and saves settings locally. No blocking source issue found in this review. Existing Android Compile evidence is recorded under M1-2; no new build was run for this review."
+          ]
         }
       ]
     },
@@ -128,8 +143,8 @@
         "M0"
       ],
       "entryCondition": "M1-1 must be done; settings implementation need not be finished.",
-      "forecast": "not_assessed",
-      "forecastNote": "Critical technical gate. One focused diagnosis session if the experiment fails.",
+      "forecast": "late",
+      "forecastNote": "2026-10-01 review: the September 28 speech gate remains incomplete in recorded evidence. One en-US run with Wi-Fi off was reported; mobile data state, repeat, silence/unrelated speech, Stop, microphone denial, and lifecycle agreement remain pending. Complete S1-2 before voice integration.",
       "outcome": "A verified speech approach on the target device, or an explicit blocker and mentor decision.",
       "demo": "With network disabled, recognize the chosen phrase after silence and unrelated speech, stop, and repeat.",
       "concepts": [
@@ -152,22 +167,32 @@
           "id": "S1-1",
           "owner": "agent",
           "title": "Implement a minimal offline speech experiment and inspect privacy/configuration; keep it small and reusable",
-            "status": "done",
-            "evidence": ["2026-09-24 agent added a separate Android offline-speech experiment page using Android SpeechRecognizer.CreateOnDeviceSpeechRecognizer, which explicitly creates an on-device recognizer with no online fallback. The page queries Android 13+ support for the en-US offline model, requests microphone permission only when Listen is tapped, runs a single en-US recognition session, shows partial/final text and errors, offers cancellation, and destroys the recognizer when leaving. Android manifest declares RECORD_AUDIO and the recognition-service query. Android compile target passed with 0 warnings and 0 errors. Device/language/offline behavior is not yet verified."]
+          "status": "done",
+          "evidence": [
+            "2026-09-24 agent added a separate Android offline-speech experiment page using Android SpeechRecognizer.CreateOnDeviceSpeechRecognizer, which explicitly creates an on-device recognizer with no online fallback. The page queries Android 13+ support for the en-US offline model, requests microphone permission only when Listen is tapped, runs a single en-US recognition session, shows partial/final text and errors, offers cancellation, and destroys the recognizer when leaving. Android manifest declares RECORD_AUDIO and the recognition-service query. Android compile target passed with 0 warnings and 0 errors. Device/language/offline behavior is not yet verified."
+          ]
         },
         {
           "id": "S1-2",
           "owner": "student",
           "title": "Run the speech matrix on the physical phone, report outcomes, and explain offline versus online processing",
           "status": "doing",
-          "evidence": ["2026-09-24 student first reported `LanguageUnavailable` for en-US using the explicit on-device recognizer; Android defines this as a supported language currently unavailable, such as a model not yet downloaded. HyperOS Settings search did not expose an on-device model menu, so agent added an in-app Android 13+ support check and model-download request. Student now reports that English speech recognition works in the updated app. Whether it works with all network connectivity disabled, repeated sessions, silence/unrelated speech, and Stop remains unverified."]
+          "evidence": [
+            "2026-09-24 student first reported `LanguageUnavailable` for en-US using the explicit on-device recognizer; Android defines this as a supported language currently unavailable, such as a model not yet downloaded. HyperOS Settings search did not expose an on-device model menu, so agent added an in-app Android 13+ support check and model-download request. Student now reports that English speech recognition works in the updated app. Whether it works with all network connectivity disabled, repeated sessions, silence/unrelated speech, and Stop remains unverified.",
+            "2026-09-27 student reports a successful English recognition session with Wi-Fi disabled on the POCO C65 (Android 15/API 35). This verifies offline recognition for that run only. Mobile data state was not specified; the remaining session matrix is still pending.",
+          "2026-10-01 student reports successful English recognition after instructions to enable airplane mode and disable Wi-Fi. This is student-reported network-disabled recognition, not independently observed privacy verification.",
+          "2026-10-01 student reports listening ended after silence; tapping Listen once in English again correctly recognized speech. This verifies silence completion and one manual restart on the phone. Three consecutive attempts, unrelated speech, Stop and microphone denial remain unconfirmed. Automatic session restart for Safety Mode is not implemented.",
+          "2026-10-01 student confirms Stop prevents subsequent recognized text and a new Listen run succeeds. Three repeated attempts, unrelated speech and microphone-denial checks remain unconfirmed."
+          ]
         },
         {
           "id": "S1-3",
           "owner": "agent",
           "title": "Review feasibility and session behavior; record the selected approach or concrete blocker/options for the mentor",
-          "status": "pending",
-          "evidence": []
+          "status": "done",
+          "evidence": [
+            "2026-09-27 agent reviewed Android's explicit on-device recognizer API and the experiment. The Android selection is a promising candidate for the pilot, not yet approved for Safety Mode: it provides one recognizer session at a time, so restart/error behavior must pass the physical-phone matrix. Student reports one successful English session with Wi-Fi disabled. Added callback version checks so late results after Stop or navigation cannot overwrite current test status, and Stop destroys the recognizer. Android Compile passed with zero warnings/errors; git diff --check passed. S1-2 remains doing pending repeat, silence/unrelated speech, Stop, and microphone-denial phone checks."
+          ]
         }
       ]
     },
@@ -176,12 +201,12 @@
       "title": "Complete the SOS path with a test button",
       "due": "2026-10-01",
       "kind": "call",
-      "status": "planned",
+      "status": "active",
       "dependsOn": [
         "M1"
       ],
-      "forecast": "not_assessed",
-      "forecastNote": "Can proceed while S1 is blocked; report speech feasibility at this call.",
+      "forecast": "at_risk",
+      "forecastNote": "2026-10-01 checkpoint: Test SOS source exists locally but is uncommitted; physical Cancel, Send Now, location-denial, SMS/copy and corrected WhatsApp-prefill checks remain pending. Prior Compile success is historical evidence; no new build or device result was supplied today.",
       "outcome": "Test SOS drives countdown, cancellation, real location, and a prepared SMS.",
       "demo": "Cancel one countdown; complete another and inspect the SMS recipient, location link, and timestamp without sending accidentally.",
       "concepts": [
@@ -205,29 +230,41 @@
           "id": "M2-1",
           "owner": "agent",
           "title": "Resolve missing-location and recipient-selection rules with the student/mentor, then implement Test SOS, countdown, cancellation, and Send Now",
-          "status": "pending",
-          "evidence": []
+          "status": "done",
+          "evidence": [
+            "2026-09-27 student preference: prepare SOS for all saved contacts and continue without a map while stating location is unavailable. These preferences are recorded in project-decisions.md. Implemented a Home Test SOS entry, five-second countdown, Cancel, Send Now, and duplicate-open guard. Background-listening preference is recorded separately because it conflicts with functional-specification.md out-of-scope/NFR-03 and remains pending mentor approval and feasibility review."
+          ]
         },
         {
           "id": "M2-2",
           "owner": "agent",
           "title": "Connect geolocation, message formatting, SMS composition, and copy fallback; test meaningful pure logic and state behavior",
-          "status": "pending",
-          "evidence": []
+          "status": "done",
+          "evidence": [
+            "2026-09-27 implemented best-effort current geolocation during the countdown, a timestamped Google Maps link, explicit unavailable-location text, SMS composition for all saved contacts, and a copy fallback. Android Compile passes with zero warnings/errors. Physical-phone scenarios remain pending; no SMS delivery is claimed.",
+            "2026-09-27 focused review confirmed SMS fallback does not retry itself recursively; Android Compile passes with zero warnings/errors. Physical phone behavior remains unverified."
+          ]
         },
         {
           "id": "M2-3",
           "owner": "student",
           "title": "Change the default message manually; run Cancel, permission denial, SMS preparation, and fallback checks on the phone",
-          "status": "pending",
-          "evidence": []
+          "status": "doing",
+          "evidence": [
+          "2026-10-01 student report: Cancel during Test SOS countdown works on the phone, following the requested check for return to Home without opening WhatsApp. Send Now, message content, permissions and fallback checks remain pending.",
+          "2026-10-01 student reports WhatsApp chat and prepared message work; reports Send Now check succeeded after instructions to open immediately and only once. No message delivery is claimed. SMS, denied location, copy fallback and manual message edit remain pending.",
+          "2026-10-01 student reports SMS flow works after identifying the app-selection prompt as Android UI. Message preparation is student-reported successful; recipient receipt was not separately confirmed. Location denial, copy fallback and manual message edit remain pending.",
+          "2026-10-01 student confirms Location unavailable appeared after the instructed denial of location permission and Test SOS run. This is student-reported denied-location message evidence. Copy fallback and manual default-message edit remain pending; M2-3 is not complete."
+        ]
         },
         {
           "id": "M2-4",
           "owner": "agent",
           "title": "Review SOS transitions and async cancellation; fix findings and prepare Thursday evidence including S1 status",
-          "status": "pending",
-          "evidence": []
+          "status": "done",
+          "evidence": [
+            "2026-09-27 agent reviewed countdown cancellation, duplicate-open guard, geolocation timeout/failure, empty recipient handling, SMS fallback, and return state. No blocking transition issue found; Android Compile passes. Device behavior remains pending."
+          ]
         }
       ]
     },
@@ -236,13 +273,13 @@
       "title": "Voice-triggered flow and both channels",
       "due": "2026-10-06",
       "kind": "call",
-      "status": "planned",
+      "status": "active",
       "dependsOn": [
         "S1",
         "M2"
       ],
-      "forecast": "not_assessed",
-      "forecastNote": "Do not hide a failed speech gate behind Test SOS.",
+      "forecast": "at_risk",
+      "forecastNote": "2026-10-01: experimental background voice source is implemented following explicit user scope extension; remaining speech/SOS prerequisites and locked-screen/device acceptance are open. October 6 checkpoint and October 8 APK remain at risk; dates unchanged.",
       "outcome": "The real voice phrase starts the complete flow; SMS and WhatsApp are available.",
       "demo": "Start listening, say an unrelated phrase then the trigger, cancel once, repeat, and open the chosen channel. Show Stop.",
       "concepts": [
@@ -267,15 +304,18 @@
           "id": "M3-1",
           "owner": "agent",
           "title": "Integrate verified speech, normalized matching, session completion handling, Safety Mode state, and lifecycle cleanup",
-          "status": "pending",
-          "evidence": []
+          "status": "doing",
+          "evidence": ["2026-10-01 independent preparation: added SafePhraseMatcher and a package-free logic-check executable; all 11 checks passed for normalized matching, nonmatches, empty inputs and Unicode. Voice integration remains pending S1/M2 readiness and lifecycle agreement; no Safety Mode device success is claimed.",
+            "2026-10-01 user explicitly authorized an experimental background-listening extension without mentor approval. Implemented microphone foreground service, notification/Stop, bounded error recovery, session restarts, normalized phrase matching and pending SOS routing. Android Compile passes with 0 warnings/errors; 11 phrase checks pass. Independent source review findings were fixed and re-reviewed. Background device feasibility, remaining S1/M2 evidence and final acceptance stay open."]
         },
         {
           "id": "M3-2",
           "owner": "agent",
           "title": "Add WhatsApp click-to-chat with international phone number and URL-encoded text; offer SMS/copy alternatives and manual sending, without bots or a messaging backend",
-          "status": "pending",
-          "evidence": []
+          "status": "done",
+          "evidence": [
+            "2026-09-27 implemented the official wa.me international-number URL with URL-encoded SOS text, one saved contact per WhatsApp handoff, a next-contact button, and explicit SMS/copy fallback. Android Compile passed with zero warnings/errors. User must press Send; link opening does not verify delivery. Physical checks are tracked under M3-3."
+          ]
         },
         {
           "id": "M3-3",
@@ -298,12 +338,12 @@
       "title": "Package, verify, and explain",
       "due": "2026-10-08",
       "kind": "call",
-      "status": "planned",
+      "status": "active",
       "dependsOn": [
         "M3"
       ],
-      "forecast": "not_assessed",
-      "forecastNote": "Run checks throughout development; reserve October 7-8 for final device regressions, fixes, and rehearsal. No speculative features.",
+      "forecast": "at_risk",
+      "forecastNote": "2026-10-01 forecast: October 8 APK target is at risk because voice integration and required device acceptance remain incomplete. Dates and required scope are unchanged; prioritize core checks and defer optional polish.",
       "outcome": "An installable APK, requirement evidence, honest limitations, and a student who can explain the app.",
       "demo": "Install the APK, configure it, trigger and cancel SOS, repeat to prepare a message, then explain the main flow and one manual change.",
       "concepts": [

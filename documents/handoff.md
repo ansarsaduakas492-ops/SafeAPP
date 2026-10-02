@@ -1,21 +1,21 @@
 # Current handoff
 
-Updated: 2026-09-24. S1 is active; S1-1 is done and S1-2 is doing. M0 remains active; M1-1 and M1-2 are done; M1-3 remains doing.
+Updated: 2026-10-02. Keep Russian concise. Student requests agent-led code and fewer serial checks; manual device acceptance remains open.
 
-## Verified state
+## Current state
 
-Local main tracks origin/main at 0737d02. Student manually created SafePhrase and ran the default MAUI app on POCO C65 (Android 15/API 35). Student manually changed the heading to `SafePhrase is ready` and confirmed it appeared on the phone. Student reports the updated Home/Settings app works, settings save across restart, and contacts can be added, edited, and deleted. M1-2 is done from source review/build and student-reported physical-device evidence; mentor acceptance is pending. M1-3 still needs the student to review the Git diff and explain the relevant files. M0-3 teach-back remains open. No commit or push.
+On October 2 the user explicitly authorized committing and pushing the SOS/background implementation to origin/main. Local main tracks origin/main; the remote was verified at 6a64a7e before publishing. Device acceptance remains as recorded below.
 
-Agent implemented Home/Settings with Preferences-backed phrase, SOS message, channel, and contact CRUD; Safety Mode is disabled. Agent added a separate Android speech experiment using `SpeechRecognizer.CreateOnDeviceSpeechRecognizer`, with service and language support checks, model download request, on-demand microphone permission, one en-US session, result/error display, cancellation, and recognizer cleanup. No audio is saved and no messages are sent. Android manifest declares `RECORD_AUDIO` and recognition-service visibility. Android Compile target passed with zero warnings/errors; `git diff --check` passed. Student now reports successful English recognition on the phone. Offline-without-network behavior and the rest of the speech test matrix remain unverified.
+Student reports Settings persistence/contact CRUD, SOS Cancel, Send Now, WhatsApp/SMS preparation, denied-location text, network-disabled English recognition, silence/manual restart, and Stop/restart working on POCO C65 Android 15/API 35. Receipt, copy fallback, manual message edit, unrelated speech, three repeats and mic denial remain unconfirmed.
 
-## Next action
+User explicitly authorized background listening without mentor approval, superseding earlier implementation hold. Scope extension is in project-decisions.md; original specification unchanged. Implemented experimental on-device en-US microphone foreground service, notification/Stop, session restart, bounded errors and normalized phrase matching. Foreground match opens countdown; background/locked match stops listening and posts notification; tap/unlock/return opens countdown. No automatic sending. Removing app from recents stops service; no process-death/boot mic restart.
 
-Student reports English speech recognition works in the app. Next, ask for one controlled offline check: disable Wi-Fi and mobile data (or airplane mode), tap Listen once, speak the phrase, and report the result. A successful single offline recognition verifies model availability for that run; repeated sessions, silence/unrelated speech, Stop, and microphone denial remain for the rest of S1-2. Do not enable Safety Mode or infer that its production voice flow is ready.
+Android Compile and full debug APK build passed with zero warnings/errors; manifest service/permissions verified. Eleven logic checks passed. Independent review found four races/routing gaps; fixes re-reviewed successfully. No background device result yet. S1/M2 evidence gates remain incomplete; M3-1 doing for authorized experiment. October 6/8 targets at risk; dates unchanged.
 
-## Pending decisions and checks
+## Next actions
 
-M0-1 awaits city/timezone and call schedule; M0-3 awaits project-name versus visible-title teach-back. Recipient WhatsApp availability and UI/SOS message language remain open. Speech experiment is due 2026-09-28; the phone matrix is now the critical gate. No continuous listening, Safety Mode, location, or messaging behavior is implemented. Mentor acceptance remains pending.
+Install updated app; save English phrase; Start Safety Mode and grant microphone/notifications. Check locked-screen phrase notification and countdown after return. Then address device failures and remaining acceptance evidence. Key sources: BackgroundSpeechService.cs, AppShell.xaml.cs, MainPage.xaml.cs; logic checks: dotnet run --project src/SafePhrase.LogicChecks.
 
 ## Paste into a fresh chat
 
-> Continue SafePhrase using AGENTS.md and documents/handoff.md. The Settings flow has been confirmed on the student's POCO C65. The Android offline speech experiment is implemented and Android compile succeeds; guide the student through the en-US and offline phone checks, then assess feasibility. Preserve all local work.
+> Continue SafePhrase using AGENTS.md and documents/handoff.md. User authorized experimental background listening without mentor approval. Preserve uncommitted source. Android APK build and 11 logic checks pass; independent review fixes are complete. Start with POCO locked-screen listening/notification check. Never claim unreported device acceptance or delivery. October 8 target remains at risk.

@@ -7,6 +7,7 @@ public partial class OfflineSpeechTestPage : ContentPage
 {
 #if ANDROID
     private Android.Speech.SpeechRecognizer? recognizer;
+    private int operationVersion;
 #endif
 
     public OfflineSpeechTestPage()
@@ -36,6 +37,7 @@ public partial class OfflineSpeechTestPage : ContentPage
 
         try
         {
+            int version = ++operationVersion;
             recognizer?.Destroy();
             recognizer = Android.Speech.SpeechRecognizer.CreateOnDeviceSpeechRecognizer(context);
             Android.Content.Intent intent = CreateEnglishIntent();
@@ -48,11 +50,14 @@ public partial class OfflineSpeechTestPage : ContentPage
                 new RecognitionSupportCallback(support =>
                     MainThread.BeginInvokeOnMainThread(() =>
                     {
-                        if (OperatingSystem.IsAndroidVersionAtLeast(33))
+                        if (version == operationVersion && OperatingSystem.IsAndroidVersionAtLeast(33))
                             HandleRecognitionSupport(support, intent);
                     }),
                     error => MainThread.BeginInvokeOnMainThread(() =>
-                        StatusLabel.Text = $"Could not check language support (Android error {error}).")));
+                    {
+                        if (version == operationVersion)
+                            StatusLabel.Text = $"Could not check language support (Android error {error}).";
+                    })));
         }
         catch (Exception exception)
         {
@@ -127,7 +132,11 @@ public partial class OfflineSpeechTestPage : ContentPage
             return;
         }
 
+        int version = ++operationVersion;
         PermissionStatus permission = await Permissions.RequestAsync<Permissions.Microphone>();
+        if (version != operationVersion)
+            return;
+
         if (permission != PermissionStatus.Granted)
         {
             StatusLabel.Text = "Microphone permission was not granted. No audio was processed.";
@@ -142,18 +151,22 @@ public partial class OfflineSpeechTestPage : ContentPage
             recognizer.SetRecognitionListener(new OfflineRecognitionListener(
                 text => MainThread.BeginInvokeOnMainThread(() =>
                 {
+                    if (version != operationVersion)
+                        return;
                     ResultLabel.Text = string.IsNullOrWhiteSpace(text) ? "No words recognized." : text;
                     StatusLabel.Text = "Session finished. Tap Listen once in English to try again.";
                     SetListening(false);
                 }),
                 error => MainThread.BeginInvokeOnMainThread(() =>
                 {
+                    if (version != operationVersion)
+                        return;
                     StatusLabel.Text = $"Recognition stopped: {error}. Check the English speech model and try again.";
                     SetListening(false);
                 }),
                 partial => MainThread.BeginInvokeOnMainThread(() =>
                 {
-                    if (!string.IsNullOrWhiteSpace(partial))
+                    if (version == operationVersion && !string.IsNullOrWhiteSpace(partial))
                         ResultLabel.Text = partial;
                 })));
 
@@ -179,7 +192,10 @@ public partial class OfflineSpeechTestPage : ContentPage
     private void OnStopClicked(object? sender, EventArgs e)
     {
 #if ANDROID
+        operationVersion++;
         recognizer?.Cancel();
+        recognizer?.Destroy();
+        recognizer = null;
         StatusLabel.Text = "Listening cancelled.";
         SetListening(false);
 #endif
@@ -194,6 +210,7 @@ public partial class OfflineSpeechTestPage : ContentPage
     protected override void OnDisappearing()
     {
 #if ANDROID
+        operationVersion++;
         recognizer?.Cancel();
         recognizer?.Destroy();
         recognizer = null;
