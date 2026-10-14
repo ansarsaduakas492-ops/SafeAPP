@@ -1,21 +1,19 @@
 # Current handoff
 
-Updated: 2026-10-02. Keep Russian concise. Student requests agent-led code and fewer serial checks; manual device acceptance remains open.
+Updated: 2026-10-14. Keep Russian concise. The student prefers agent-led code and a compact UI. Preserve existing work. The student requested commit and push; branch main tracks origin/main. Do not claim phone validation or a real SMS.
 
 ## Current state
 
-On October 2 the user explicitly authorized committing and pushing the SOS/background implementation to origin/main. Local main tracks origin/main; the remote was verified at 6a64a7e before publishing. Device acceptance remains as recorded below.
+M3-7 implements direct Android SMS after explicit confirmation of a background SOS. Start offers SEND_SMS permission. The lock-screen prompt offers Cancel SOS / Send SOS SMS; ordinary device unlock is still required. With permission, SafePhrase sends to saved contacts without opening a composer for another Send tap. If permission is unavailable, it offers the existing manual message-app route. Foreground/manual SMS and WhatsApp remain manual. A synchronous private claim prevents replay of the same detection after process interruption. Ambiguous or partial native results are not retried automatically; sent callbacks are not proof of delivery. See confirmed-sms.md and lock-screen-sos.md.
 
-Student reports Settings persistence/contact CRUD, SOS Cancel, Send Now, WhatsApp/SMS preparation, denied-location text, network-disabled English recognition, silence/manual restart, and Stop/restart working on POCO C65 Android 15/API 35. Receipt, copy fallback, manual message edit, unrelated speech, three repeats and mic denial remain unconfirmed.
+Latest Android Debug build passes with 0 warnings/errors in isolated `obj/SmsConfirmation` and `bin/SmsConfirmation` directories. The Visual Studio-owned ordinary outputs were left untouched. Independent final review found no actionable issue. No tests were run for this increment; the earlier 46 linked checks predate the updated claim callback. No device deployment or SMS send occurred. Permission, default SIM, carrier and lock-screen behavior remain unconfirmed.
 
-User explicitly authorized background listening without mentor approval, superseding earlier implementation hold. Scope extension is in project-decisions.md; original specification unchanged. Implemented experimental on-device en-US microphone foreground service, notification/Stop, session restart, bounded errors and normalized phrase matching. Foreground match opens countdown; background/locked match stops listening and posts notification; tap/unlock/return opens countdown. No automatic sending. Removing app from recents stops service; no process-death/boot mic restart.
-
-Android Compile and full debug APK build passed with zero warnings/errors; manifest service/permissions verified. Eleven logic checks passed. Independent review found four races/routing gaps; fixes re-reviewed successfully. No background device result yet. S1/M2 evidence gates remain incomplete; M3-1 doing for authorized experiment. October 6/8 targets at risk; dates unchanged.
+M3 source implementation tasks M3-1 through M3-7 are recorded done, but M3 remains active/late. S1/M2 evidence, student M3-3, device scenarios and mentor acceptance remain open. M4 APK/instructions/demo remains pending. October 6/8 targets are overdue and unchanged. Do not conflate code/build, student/device evidence or mentor acceptance.
 
 ## Next actions
 
-Install updated app; save English phrase; Start Safety Mode and grant microphone/notifications. Check locked-screen phrase notification and countdown after return. Then address device failures and remaining acceptance evidence. Key sources: BackgroundSpeechService.cs, AppShell.xaml.cs, MainPage.xaml.cs; logic checks: dotnet run --project src/SafePhrase.LogicChecks.
+Complete the requested commit and push of the full project changes after reviewing the staged diff and confirming same-branch upstream. Then the student can install/run from Visual Studio, verify the permission offer and use a consenting test contact to observe actual SMS status. Never record private contact data. Continue M4 packaging and walkthrough afterward.
 
 ## Paste into a fresh chat
 
-> Continue SafePhrase using AGENTS.md and documents/handoff.md. User authorized experimental background listening without mentor approval. Preserve uncommitted source. Android APK build and 11 logic checks pass; independent review fixes are complete. Start with POCO locked-screen listening/notification check. Never claim unreported device acceptance or delivery. October 8 target remains at risk.
+> Continue SafePhrase using AGENTS.md and documents/handoff.md. M3-7 adds direct SMS after explicit background confirmation; read confirmed-sms.md and lock-screen-sos.md. Source tasks are done, but S1/M2, student M3-3, phone permission/wake/SMS behavior, mentor acceptance and M4 packaging/demo remain open. Do not claim a message was delivered. The user requested a commit and push; check handoff for the latest Git result.

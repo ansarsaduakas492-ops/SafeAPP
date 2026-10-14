@@ -17,7 +17,9 @@ public static class SosMessageBuilder
 
     public static string CreateWhatsAppLink(string internationalPhone, string message)
     {
-        string digits = new(internationalPhone.Where(char.IsDigit).ToArray());
+        string digits = new(internationalPhone.Where(char.IsAsciiDigit).ToArray());
+        if (digits.Length is < 8 or > 15 || digits[0] == '0')
+            throw new ArgumentException("Use an international phone number with a country code.", nameof(internationalPhone));
         return $"https://wa.me/{digits}?text={Uri.EscapeDataString(message)}";
     }
 }

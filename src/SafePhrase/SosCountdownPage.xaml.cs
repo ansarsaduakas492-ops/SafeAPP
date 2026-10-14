@@ -13,7 +13,9 @@ public partial class SosCountdownPage : ContentPage
     private CancellationTokenSource? countdownCancellation;
     private CancellationTokenSource? locationCancellation;
     private Task<Location?>? locationTask;
-    private bool isPreparingMessage;
+    private readonly SosFlowGuard flow = new();
+    private bool isVisible;
+    private bool requestingLocationPermission;
     private bool hasStarted;
     private int nextWhatsAppContactIndex;
     private string? pendingMessageText;
@@ -22,27 +24,72 @@ public partial class SosCountdownPage : ContentPage
     {
         InitializeComponent();
         settings = SafetySettingsStore.Load();
+        SosChannelLabel.Text = $"{settings.PreferredChannel} \u00b7 {settings.Contacts.Count} trusted contact(s)";
     }
 
     protected override void OnAppearing()
     {
         base.OnAppearing();
+        isVisible = true;
+        Shell.Current.Navigating -= OnShellNavigating;
+        Shell.Current.Navigating += OnShellNavigating;
+        SafetyModeState.SetSosFlowOpen(true);
         SafetyModeState.Changed -= OnSafetyChanged;
         SafetyModeState.Changed += OnSafetyChanged;
         if (hasStarted)
             return;
 
         hasStarted = true;
-        isPreparingMessage = false;
         CancelButton.IsEnabled = true;
-        SendNowButton.IsEnabled = true;
+        SendNowButton.IsEnabled = false;
         DoneButton.IsVisible = false;
         NextWhatsAppButton.IsVisible = false;
         DoneButton.Text = "Return to Home";
         countdownCancellation = new CancellationTokenSource();
-        locationCancellation = new CancellationTokenSource();
-        locationTask = TryGetLocationAsync(locationCancellation.Token);
-        _ = RunCountdownAsync(countdownCancellation.Token);
+        _ = StartCountdownAsync(countdownCancellation.Token);
+    }
+
+    private async Task StartCountdownAsync(CancellationToken cancellationToken)
+    {
+        try
+        {
+            CountdownLabel.Text = "Location for your message";
+            CountdownNumberLabel.Text = "\u2014";
+            StatusLabel.Text = "You can allow location or continue without it.";
+            requestingLocationPermission = true;
+            PermissionStatus permission;
+            try
+            {
+                permission = await Permissions.RequestAsync<Permissions.LocationWhenInUse>();
+            }
+            finally
+            {
+                requestingLocationPermission = false;
+            }
+            if (cancellationToken.IsCancellationRequested || !CanOpenChannel())
+                return;
+            if (permission == PermissionStatus.Granted)
+            {
+                locationCancellation = new CancellationTokenSource();
+                locationTask = TryGetLocationAsync(locationCancellation.Token);
+                StatusLabel.Text = "Getting your location...";
+            }
+            else
+            {
+                StatusLabel.Text = "Location unavailable. Your message can still open.";
+            }
+            SendNowButton.IsEnabled = true;
+            await RunCountdownAsync(cancellationToken);
+        }
+        catch (Exception)
+        {
+            if (flow.IsEnded)
+                return;
+            // Location permission failure must not prevent an SOS without coordinates.
+            StatusLabel.Text = "Location unavailable. Your message can still open.";
+            SendNowButton.IsEnabled = true;
+            await RunCountdownAsync(cancellationToken);
+        }
     }
 
     private async Task RunCountdownAsync(CancellationToken cancellationToken)
@@ -51,6 +98,7 @@ public partial class SosCountdownPage : ContentPage
         {
             for (int secondsLeft = CountdownSeconds; secondsLeft > 0; secondsLeft--)
             {
+                CountdownNumberLabel.Text = secondsLeft.ToString();
                 CountdownLabel.Text = $"SOS message opens in {secondsLeft} seconds";
                 await Task.Delay(TimeSpan.FromSeconds(1), cancellationToken);
             }
@@ -63,6 +111,8 @@ public partial class SosCountdownPage : ContentPage
         }
         catch (Exception exception)
         {
+            if (!CanOpenChannel())
+                return;
             await DisplayAlertAsync("Could not prepare SOS", exception.Message, "OK");
             ShowDoneState("Could not prepare the SOS message. No message was sent.");
         }
@@ -89,9 +139,9 @@ public partial class SosCountdownPage : ContentPage
 
     private async void OnCancelClicked(object? sender, EventArgs e)
     {
-        if (isPreparingMessage)
+        if (flow.IsPreparing)
             return;
-
+        flow.End();
         countdownCancellation?.Cancel();
         locationCancellation?.Cancel();
         await Shell.Current.GoToAsync("..");
@@ -104,13 +154,10 @@ public partial class SosCountdownPage : ContentPage
 
     private async Task OpenSelectedChannelAsync()
     {
-        if (isPreparingMessage)
+        if (!flow.TryPrepare(isVisible, SafetyModeState.IsAppVisible))
             return;
-        if (!CanOpenChannel())
-            return;
-
-        isPreparingMessage = true;
         countdownCancellation?.Cancel();
+        CountdownDial.IsVisible = false;
         CancelButton.IsEnabled = false;
         SendNowButton.IsEnabled = false;
         CountdownLabel.Text = "Preparing the SOS message...";
@@ -129,6 +176,8 @@ public partial class SosCountdownPage : ContentPage
         }
 
         locationCancellation?.Cancel();
+        if (!CanOpenChannel())
+            return;
         string messageText = SosMessageBuilder.Create(settings, location, DateTimeOffset.Now);
         string[] recipients = settings.Contacts
             .Select(contact => contact.Phone)
@@ -146,7 +195,7 @@ public partial class SosCountdownPage : ContentPage
         {
             pendingMessageText = messageText;
             nextWhatsAppContactIndex = 0;
-            isPreparingMessage = false;
+            flow.CompletePreparation();
             await OpenNextWhatsAppContactAsync();
             return;
         }
@@ -178,9 +227,7 @@ public partial class SosCountdownPage : ContentPage
 
     private async Task OpenNextWhatsAppContactAsync()
     {
-        if (isPreparingMessage)
-            return;
-        if (!CanOpenChannel())
+        if (!flow.TryNext(isVisible, SafetyModeState.IsAppVisible))
             return;
 
         string[] recipients = settings.Contacts
@@ -198,7 +245,6 @@ public partial class SosCountdownPage : ContentPage
             return;
         }
 
-        isPreparingMessage = true;
         NextWhatsAppButton.IsEnabled = false;
         string phone = recipients[nextWhatsAppContactIndex];
         string name = names[nextWhatsAppContactIndex];
@@ -233,7 +279,7 @@ public partial class SosCountdownPage : ContentPage
         }
         finally
         {
-            isPreparingMessage = false;
+            flow.CompletePreparation();
         }
     }
 
@@ -244,6 +290,9 @@ public partial class SosCountdownPage : ContentPage
         string choice = offerSmsOption
             ? await DisplayActionSheetAsync($"SOS channel unavailable: {reason}", "Cancel", null, "Open SMS for all contacts", "Copy SOS message")
             : await DisplayActionSheetAsync($"SOS channel unavailable: {reason}", "Cancel", null, "Copy SOS message");
+
+        if (!CanOpenChannel())
+            return;
 
         if (choice == "Open SMS for all contacts")
         {
@@ -262,8 +311,12 @@ public partial class SosCountdownPage : ContentPage
 
     private void ShowDoneState(string status)
     {
+        flow.End();
+        if (Shell.Current.CurrentPage != this)
+            return;
         StatusLabel.Text = status;
-        CountdownLabel.Text = "Test finished";
+        CountdownLabel.Text = "SOS preparation finished";
+        CountdownDial.IsVisible = false;
         CancelButton.IsVisible = false;
         SendNowButton.IsVisible = false;
         NextWhatsAppButton.IsVisible = false;
@@ -273,15 +326,17 @@ public partial class SosCountdownPage : ContentPage
 
     private bool CanOpenChannel()
     {
-        if (SafetyModeState.IsAppVisible)
+        if (flow.CanAct(isVisible, SafetyModeState.IsAppVisible))
             return true;
+        if (flow.IsEnded || !isVisible)
+            return false;
         ShowDoneState("SOS opening cancelled because SafePhrase is not visible. No message was sent.");
         return false;
     }
 
     private void OnSafetyChanged()
     {
-        if (!SafetyModeState.IsAppVisible && !isPreparingMessage && !DoneButton.IsVisible)
+        if (!SafetyModeState.IsAppVisible && !requestingLocationPermission && !flow.HasPrepared && !flow.IsEnded)
         {
             countdownCancellation?.Cancel();
             locationCancellation?.Cancel();
@@ -296,11 +351,30 @@ public partial class SosCountdownPage : ContentPage
 
     private async void OnDoneClicked(object? sender, EventArgs e)
     {
+        flow.End();
         await Shell.Current.GoToAsync("..");
+    }
+
+    private void OnShellNavigating(object? sender, ShellNavigatingEventArgs e)
+    {
+        if (Shell.Current.CurrentPage != this)
+            return;
+        flow.End();
+        countdownCancellation?.Cancel();
+        locationCancellation?.Cancel();
+        SafetyModeState.SetSosFlowOpen(false);
+        if (!SafetyModeState.HasPendingSos && !SafetyModeState.IsActive && !SafetyModeState.IsStarting)
+            SafetyModeState.Update(false, "Safety Mode is stopped. Start again to listen.");
     }
 
     protected override void OnDisappearing()
     {
+        isVisible = false;
+        if (flow.IsEnded)
+        {
+            Shell.Current.Navigating -= OnShellNavigating;
+            SafetyModeState.SetSosFlowOpen(false);
+        }
         SafetyModeState.Changed -= OnSafetyChanged;
         countdownCancellation?.Cancel();
         locationCancellation?.Cancel();

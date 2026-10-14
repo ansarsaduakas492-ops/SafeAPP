@@ -12,6 +12,7 @@ namespace SafePhrase;
 public sealed class BackgroundSpeechService : Service
 {
     public const string StopAction = "SafePhrase.STOP_LISTENING";
+    public const string StartRequestId = "SafePhrase.START_REQUEST_ID";
     private const string ChannelId = "safephrase_listening";
     private const string AlertChannelId = "safephrase_detection";
     private const int ListeningNotificationId = 7101;
@@ -21,6 +22,7 @@ public sealed class BackgroundSpeechService : Service
     private int version;
     private int consecutiveErrors;
     private bool running;
+    private int requestId;
     private string phrase = "";
 
     public override IBinder? OnBind(Intent? intent) => null;
@@ -37,6 +39,14 @@ public sealed class BackgroundSpeechService : Service
         if (running)
             return StartCommandResult.NotSticky;
 
+        int requestedId = intent?.GetIntExtra(StartRequestId, -1) ?? -1;
+        if (!SafetyModeState.AcceptStart(requestedId))
+        {
+            StopSelf(startId);
+            return StartCommandResult.NotSticky;
+        }
+        requestId = requestedId;
+
         try
         {
             NotificationManager manager = (NotificationManager)GetSystemService(NotificationService)!;
@@ -45,8 +55,9 @@ public sealed class BackgroundSpeechService : Service
             manager.CreateNotificationChannel(new NotificationChannel(AlertChannelId,
                 "SafePhrase detection and errors", NotificationImportance.High));
             manager.Cancel(ResultNotificationId);
+            VoiceSosAlert.Dismiss(this);
             StartForeground(ListeningNotificationId, BuildNotification(
-                "Safety Mode active", "Listening for your English safe phrase. Tap Stop to end.", true),
+                "Safety Mode starting", "Preparing your microphone. Tap Stop to end.", true),
                 ForegroundService.TypeMicrophone);
             phrase = SafetySettingsStore.Load().SafePhrase;
             if (SafePhraseMatcher.Normalize(phrase).Length == 0)
@@ -56,7 +67,6 @@ public sealed class BackgroundSpeechService : Service
             handler = new Handler(Looper.MainLooper!);
             running = true;
             consecutiveErrors = 0;
-            SafetyModeState.BeginListening();
             StartSession();
         }
         catch (Exception exception)
@@ -69,7 +79,7 @@ public sealed class BackgroundSpeechService : Service
 
     private void StartSession()
     {
-        if (!running || SafetyModeState.StopRequested)
+        if (!running || !SafetyModeState.OwnsService(requestId))
             return;
         int session = ++version;
         try
@@ -78,16 +88,17 @@ public sealed class BackgroundSpeechService : Service
             recognizer = SpeechRecognizer.CreateOnDeviceSpeechRecognizer(this);
             recognizer.SetRecognitionListener(new Listener(
                 text => handler?.Post(() => CompleteSession(session, text)),
-                error => handler?.Post(() => HandleError(session, error))));
+                error => handler?.Post(() => HandleError(session, error)),
+                () => handler?.Post(() => SessionReady(session))));
             using Intent request = new(RecognizerIntent.ActionRecognizeSpeech);
             request.PutExtra(RecognizerIntent.ExtraLanguageModel, RecognizerIntent.LanguageModelFreeForm);
             request.PutExtra(RecognizerIntent.ExtraLanguage, "en-US");
             request.PutExtra(RecognizerIntent.ExtraPartialResults, false);
+            SafetyModeState.SetListening(false, "Starting recognition...");
             recognizer.StartListening(request);
-            SafetyModeState.Update(true, "Listening in English (US). Background mode is experimental.");
             handler?.PostDelayed(() =>
             {
-                if (running && version == session)
+                if (running && SafetyModeState.OwnsService(requestId) && version == session)
                     StopListening("Speech session stopped responding. Start Safety Mode again.", notify: true);
             }, 45000);
         }
@@ -97,17 +108,26 @@ public sealed class BackgroundSpeechService : Service
         }
     }
 
+    private void SessionReady(int session)
+    {
+        if (!running || !SafetyModeState.OwnsService(requestId) || version != session)
+            return;
+        SafetyModeState.SetListening(true, "Listening for your safe phrase.");
+        ((NotificationManager)GetSystemService(NotificationService)!).Notify(ListeningNotificationId,
+            BuildNotification("Safety Mode listening", "Listening for your English safe phrase. Tap Stop to end.", true));
+    }
+
     private void CompleteSession(int session, string? text)
     {
-        if (!running || SafetyModeState.StopRequested || version != session)
+        if (!running || !SafetyModeState.OwnsService(requestId) || version != session)
             return;
         consecutiveErrors = 0;
+        SafetyModeState.UpdateRecognizedText(text);
         if (SafePhraseMatcher.Matches(phrase, text))
         {
             StopListening("Safe phrase detected.");
-            ((NotificationManager)GetSystemService(NotificationService)!).Notify(ResultNotificationId,
-                BuildNotification("Safe phrase detected", "Tap to open the SOS countdown. No message sent.", false));
             SafetyModeState.PhraseDetected();
+            VoiceSosAlert.Show(this, fullScreen: !SafetyModeState.IsAppVisible);
             return;
         }
         ScheduleRestart(400);
@@ -115,7 +135,7 @@ public sealed class BackgroundSpeechService : Service
 
     private void HandleError(int session, SpeechRecognizerError error)
     {
-        if (!running || SafetyModeState.StopRequested || version != session)
+        if (!running || !SafetyModeState.OwnsService(requestId) || version != session)
             return;
         if (error is SpeechRecognizerError.NoMatch or SpeechRecognizerError.SpeechTimeout)
         {
@@ -139,10 +159,12 @@ public sealed class BackgroundSpeechService : Service
         int restart = version;
         recognizer?.Destroy();
         recognizer = null;
-        SafetyModeState.Update(true, "Safety Mode active. Restarting listening after the session ended...");
+        SafetyModeState.SetListening(false, "Restarting recognition...");
+        ((NotificationManager)GetSystemService(NotificationService)!).Notify(ListeningNotificationId,
+            BuildNotification("Safety Mode restarting", "Preparing the next speech session. Tap Stop to end.", true));
         handler?.PostDelayed(() =>
         {
-            if (running && !SafetyModeState.StopRequested && version == restart)
+            if (running && SafetyModeState.OwnsService(requestId) && version == restart)
                 StartSession();
         }, delay);
     }
@@ -178,7 +200,7 @@ public sealed class BackgroundSpeechService : Service
         recognizer?.Destroy();
         recognizer = null;
         StopForeground(StopForegroundFlags.Remove);
-        SafetyModeState.Update(false, status);
+        SafetyModeState.FinishService(requestId, status);
         if (notify)
             ((NotificationManager)GetSystemService(NotificationService)!).Notify(ResultNotificationId,
                 BuildNotification("Safety Mode stopped", status, false));
@@ -195,18 +217,19 @@ public sealed class BackgroundSpeechService : Service
         recognizer?.Cancel();
         recognizer?.Destroy();
         recognizer = null;
-        if (SafetyModeState.IsActive)
-            SafetyModeState.Update(false, "Safety Mode stopped by Android. Start again to listen.");
+        if (SafetyModeState.OwnsService(requestId))
+            SafetyModeState.FinishService(requestId, "Safety Mode stopped by Android. Start again to listen.");
         base.OnDestroy();
     }
 
     public override void OnTaskRemoved(Intent? rootIntent)
     {
+        SafetyModeState.RequestStop("Safety Mode stopped when the app was removed from recent apps.");
         StopListening("Safety Mode stopped when the app was removed from recent apps.");
         base.OnTaskRemoved(rootIntent);
     }
 
-    private sealed class Listener(Action<string?> result, Action<SpeechRecognizerError> error)
+    private sealed class Listener(Action<string?> result, Action<SpeechRecognizerError> error, Action ready)
         : Java.Lang.Object, IRecognitionListener
     {
         public void OnResults(Bundle? results) => result(results?.GetStringArrayList(SpeechRecognizer.ResultsRecognition)?.FirstOrDefault());
@@ -216,7 +239,7 @@ public sealed class BackgroundSpeechService : Service
         public void OnEndOfSpeech() { }
         public void OnEvent(int eventType, Bundle? parameters) { }
         public void OnPartialResults(Bundle? partialResults) { }
-        public void OnReadyForSpeech(Bundle? parameters) { }
+        public void OnReadyForSpeech(Bundle? parameters) => ready();
         public void OnRmsChanged(float rmsdB) { }
     }
 }

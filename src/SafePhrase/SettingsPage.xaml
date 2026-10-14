@@ -1,32 +1,49 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="SafePhrase.SettingsPage"
-             Title="Settings">
-    <ScrollView>
-        <VerticalStackLayout Padding="24" Spacing="16">
-            <Label Text="Safety settings" Style="{StaticResource Headline}"
-                   SemanticProperties.HeadingLevel="Level1" />
-            <Label Text="Safe phrase" />
-            <Entry x:Name="PhraseEntry" Placeholder="Words you will say" MaxLength="100" />
-            <Label Text="SOS message" />
-            <Editor x:Name="MessageEditor" AutoSize="TextChanges" HeightRequest="110" />
-            <Label Text="Preferred channel" />
-            <Picker x:Name="ChannelPicker" Title="Choose a channel">
-                <Picker.Items>
-                    <x:String>WhatsApp</x:String>
-                    <x:String>SMS</x:String>
-                </Picker.Items>
-            </Picker>
+             x:Class="SafePhrase.SettingsPage" Title="Settings">
+    <ScrollView x:Name="SettingsScrollView">
+        <VerticalStackLayout Padding="24,16" Spacing="12" MaximumWidthRequest="480" HorizontalOptions="Fill">
+            <Label Text="Safe phrase" Style="{StaticResource SectionTitle}" />
+            <Border Style="{StaticResource FieldContainer}">
+                <Entry x:Name="PhraseEntry" Placeholder="Your English phrase" MaxLength="100" />
+            </Border>
+            <Label Text="SOS message" FontFamily="OpenSansSemibold" Margin="0,8,0,0" />
+            <Border Style="{StaticResource FieldContainer}">
+                <Editor x:Name="MessageEditor" AutoSize="TextChanges" MinimumHeightRequest="84" Placeholder="Your SOS message" />
+            </Border>
+            <Label Text="Channel" FontFamily="OpenSansSemibold" />
+            <Label Text="For manual SOS. Background confirmation sends SMS when SMS permission is allowed." Style="{StaticResource MutedText}" FontSize="12" />
+            <Border Style="{StaticResource FieldContainer}">
+                <Picker x:Name="ChannelPicker" Title="Choose a channel">
+                    <Picker.Items><x:String>WhatsApp</x:String><x:String>SMS</x:String></Picker.Items>
+                </Picker>
+            </Border>
             <Button Text="Save settings" Clicked="OnSaveSettingsClicked" />
-            <Label Text="Trusted contacts" Style="{StaticResource SubHeadline}" />
-            <VerticalStackLayout x:Name="ContactsLayout" Spacing="10" />
-            <Label Text="Contact name (optional)" />
-            <Entry x:Name="NameEntry" Placeholder="For example, Mom" MaxLength="60" />
-            <Label Text="Phone number" />
-            <Entry x:Name="PhoneEntry" Placeholder="+996..." Keyboard="Telephone" MaxLength="24" />
-            <Button x:Name="ContactSaveButton" Text="Add contact" Clicked="OnSaveContactClicked" />
-            <Button x:Name="CancelEditButton" Text="Cancel edit" IsVisible="False" Clicked="OnCancelEditClicked" />
+            <VerticalStackLayout x:Name="VoiceAlertSection" Spacing="6" Margin="0,12,0,0">
+                <Label Text="Lock-screen SOS" Style="{StaticResource SectionTitle}" />
+                <Label x:Name="VoiceAlertStatusLabel" Style="{StaticResource MutedText}" />
+                <Button x:Name="VoiceAlertPermissionButton" Text="Allow full-screen alerts" Style="{StaticResource SecondaryAction}"
+                        Clicked="OnVoiceAlertPermissionClicked" />
+            </VerticalStackLayout>
+            <VerticalStackLayout x:Name="ContactsSection" Spacing="10" Margin="0,16,0,0">
+                <Label Text="Contacts" Style="{StaticResource SectionTitle}" />
+                <Label x:Name="EmptyContactsLabel" Text="Add someone you trust below." Style="{StaticResource MutedText}" />
+                <VerticalStackLayout x:Name="ContactsLayout" Spacing="8" />
+            </VerticalStackLayout>
+            <Border x:Name="ContactFormSection" StrokeThickness="0" Padding="0" BackgroundColor="Transparent" Margin="0,12,0,0">
+                <VerticalStackLayout Spacing="10">
+                    <Label x:Name="ContactFormTitleLabel" Text="Add contact" Style="{StaticResource SectionTitle}" />
+                    <Border Style="{StaticResource FieldContainer}">
+                        <Entry x:Name="NameEntry" Placeholder="Name (optional)" MaxLength="60" />
+                    </Border>
+                    <Border Style="{StaticResource FieldContainer}">
+                        <Entry x:Name="PhoneEntry" Placeholder="Phone number: +996..." Keyboard="Telephone" MaxLength="24" />
+                    </Border>
+                    <Button x:Name="ContactSaveButton" Text="Add contact" Clicked="OnSaveContactClicked" />
+                    <Button x:Name="CancelEditButton" Text="Cancel edit" IsVisible="False" Clicked="OnCancelEditClicked" Style="{StaticResource TextAction}" />
+                </VerticalStackLayout>
+            </Border>
         </VerticalStackLayout>
     </ScrollView>
 </ContentPage>

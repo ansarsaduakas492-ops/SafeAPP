@@ -80,3 +80,51 @@ Resolved by the messaging clarification below: retain external WhatsApp/SMS comp
 - This scope increases October 8 delivery risk. Required acceptance checks remain open; dates are unchanged.
 
 Sources: https://developer.android.com/develop/background-work/services/fgs/service-types ; https://developer.android.com/develop/background-work/services/fgs/restrictions-bg-start ; https://developer.android.com/guide/components/activities/secure-bal ; https://developer.android.com/reference/android/speech/SpeechRecognizer
+
+## 2026-10-08 — background voice completion plan confirmed
+
+- The student explicitly included Background Voice in the project and approved implementation of the completion plan. Retain user-started, on-device en-US recognition while minimized or locked, with the existing visible microphone notification and Stop action.
+- The student selected notification-and-return for background detection: stop listening, retain the pending SOS, and open the five-second countdown after the app returns. Sending remains manual through SMS/WhatsApp. No background message sending or automatic activity launch is requested.
+- The student selected stopping when SafePhrase is removed from recent apps. No microphone restart after process death or boot is added. Android/device feasibility and mentor acceptance remain separate from code completion.
+- A pending detection is acknowledged only after successful countdown navigation; failed navigation can be retried from Home. The last recognized text is displayed in memory only and cleared on a new listening session. Audio and transcripts are not persisted or logged.
+- Keep .NET MAUI/C#/XAML, one application project, and the existing session restart/error limits. Complete M3-1 first; M4 packaging and the student walkthrough follow milestone readiness. The October 6 checkpoint is overdue and October 8 delivery remains at risk; no dates are changed.
+
+## 2026-10-12 — student-requested interface refresh
+
+- The student explicitly requested a new interface using their supplied app-comparison image as a reference. Apply one dominant Safety Mode action, clear state, grouped settings, contact cards and a distinct manual SOS action. This authorizes the UI increment despite the prior deferral of optional polish.
+- Keep the existing background notification-and-return flow, manual SMS/WhatsApp sending, contact CRUD and local persistence. No map, live contact status, route accompaniment, audio/video recording or additional delivery channel is requested.
+- Use a light teal palette with system-dark support, native MAUI/XAML controls and existing fonts. Retain English UI and the student-written readiness label. Record this as M3-5, one bounded agent task; source specification and milestone due dates stay unchanged.
+- The October 6 and October 8 targets have passed without recorded final acceptance. The UI increment does not establish device readiness, learning completion or mentor acceptance. Design rationale is in ui-design.md.
+
+## 2026-10-12 — student requested less UI density
+
+- Student described the initial refresh as overwhelming. Revise the existing M3-5 interface into a flat main screen with only the principal action/status, Settings, manual SOS and Details. Saved setup/contact/recognition information remains available through Details.
+- Remove marketing/numbered headings, duplicate readiness text and large section wrappers. Use compact settings fields/contact cards and a plain countdown; preserve pinned cancellation and manual-send explanation.
+- This supersedes the initial presentation choices, including retaining the extra readiness subtitle. It changes no background, contact storage or message behavior and is not evidence of device or mentor acceptance.
+
+## 2026-10-13 — integrated source review and action clarity
+
+- Student explicitly authorized the listening-to-SOS-to-message code review/fixes and a more pleasant, understandable interface. Complete M3-4, preserving the compact M3-5 layout and earlier uncommitted work.
+- Lock settings during startup/listening/pending/open SOS; stop before changing the service's phrase/recipient snapshot. Separate startup ownership and recognizer readiness; stale commands/callbacks cannot affect a newer start.
+- Request location consent before the five-second timer. Denial continues without coordinates; Cancel/navigation invalidate pending preparation/fallback. Manual sending and experimental background behavior remain.
+- Use native SVG action icons and short accessible labels, a circular action and clear Stop/SOS colors. No backend/framework/channel added. Dates and device/student/mentor gates unchanged.
+
+## 2026-10-13 — student-requested lock-screen voice confirmation
+
+- Student authorized waking/opening the application after a background trigger and offering Cancel or continuation. Add M3-6 using permission-gated Android full-screen notification and a small native C# activity. This replaces notification-only handling where Android permits it; otherwise retain notification fallback.
+- The lock-screen view is a generic confirmation. Continue requires normal unlock before the existing countdown and manual SMS/WhatsApp; Cancel and Back discard only the matching detection. Persist a random detection ID beside the flag to reject stale intents, never speech/audio.
+- Add an explicit full-screen special-access route to Settings. Respect user notification/permission controls; no direct background activity launch, overlay or credential bypass. Android may show heads-up instead when unlocked. Full-screen Play eligibility and phone wake behavior are not established by code generation.
+- Keep .NET MAUI/C#/XAML, existing foreground flow, experimental en-US recognition, Stop/recents rules and manual sending. Dates remain overdue and unchanged. Details/evidence: lock-screen-sos.md.
+
+## 2026-10-13 — guided permission offer
+
+- Student asked SafePhrase to explain and propose needed permissions instead of making the user find settings. Add the missing full-screen access offer to Start; microphone/notification runtime requests remain in that same startup flow.
+- Allow opens the precise Android special-access page, waits for return and rechecks permission. Already-granted access skips the offer; denial keeps an explicit notification-only/Cancel choice. Android still requires the user's system confirmation; the app does not grant its own access.
+- Preserve startup ownership and Stop/foreground guards, and reuse the same permission intent from Settings. This refines M3-6 without new dates or device/acceptance claims.
+
+## 2026-10-14 — direct SMS after background confirmation
+
+- Student clarified that pressing the background SOS confirmation should send the SOS immediately, without opening a composer for a second Send tap. Implement permission-gated Android SmsManager sending to saved trusted contacts after explicit confirmation and ordinary unlock. Label the action Send SOS SMS.
+- If SMS permission is denied/unavailable, retain the manual message-app route. Foreground/manual channel selection and WhatsApp remain unchanged. A confirmed carrier attempt cannot be canceled after dispatch; Cancel remains available before confirmation.
+- Consume the detection with a synchronous private claim before dispatch; never retry an unknown/partial outcome automatically. Sent callbacks do not prove recipient delivery. Record SMS charges, default SIM, platform/store policy, and no phone evidence separately. See confirmed-sms.md.
+- No message was sent, physical-device behavior is unverified, and dates/mentor acceptance remain unchanged.

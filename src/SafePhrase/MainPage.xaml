@@ -1,23 +1,68 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="SafePhrase.MainPage"
-             Title="Home">
-    <ScrollView>
-        <VerticalStackLayout Padding="24" Spacing="18">
-            <Label Text="SafePhrase is ready"
-                   Style="{StaticResource Headline}"
+             x:Class="SafePhrase.MainPage" Title="Home" Shell.NavBarIsVisible="False">
+    <Grid RowDefinitions="Auto,*,Auto">
+        <Grid Padding="24,16" ColumnDefinitions="*,Auto">
+            <Label Text="SafePhrase" FontFamily="OpenSansSemibold" FontSize="21" VerticalOptions="Center"
                    SemanticProperties.HeadingLevel="Level1" />
-            <Label Text="Set up your phrase and trusted contacts before using Safety Mode." />
-            <Label x:Name="SetupStatusLabel" Text="Checking settings..." />
-            <Button Text="Settings" Clicked="OnSettingsClicked" />
-            <Button x:Name="SpeechTestButton" Text="Offline speech test" Clicked="OnOfflineSpeechTestClicked" />
-            <Button x:Name="TestSosButton" Text="Test SOS" Clicked="OnTestSosClicked" IsEnabled="False" />
-            <Button x:Name="StartSafetyButton" Text="Start Safety Mode" Clicked="OnStartSafetyClicked" IsEnabled="False" />
-            <Button x:Name="StopSafetyButton" Text="Stop Safety Mode" Clicked="OnStopSafetyClicked" IsEnabled="False" />
-            <Label x:Name="SafetyStatusLabel" Text="Safety Mode is stopped." />
-            <Label Text="Experimental background listening: start while this screen is open. A detected phrase in the background shows a notification; tap it to open SOS. Do not rely on this prototype for emergencies."
-                   FontSize="13" />
+            <Button Grid.Column="1" Text="Settings" ImageSource="action_gear.png" ContentLayout="Left,6"
+                    Style="{StaticResource TextAction}" Clicked="OnSettingsClicked" />
+        </Grid>
+        <ScrollView Grid.Row="1">
+            <VerticalStackLayout Padding="24,20" Spacing="18" MaximumWidthRequest="480" HorizontalOptions="Fill">
+                <Label x:Name="ModeTitleLabel" Text="Safety Mode" FontFamily="OpenSansSemibold" FontSize="24"
+                       HorizontalTextAlignment="Center" />
+                <Grid WidthRequest="196" HeightRequest="196" HorizontalOptions="Center" Margin="0,8">
+                    <Border StrokeThickness="0" StrokeShape="RoundRectangle 98"
+                            BackgroundColor="{AppThemeBinding Light={StaticResource TintLight}, Dark={StaticResource TintDark}}" InputTransparent="True" />
+                    <Button x:Name="StartSafetyButton" Margin="10" Clicked="OnStartSafetyClicked" IsEnabled="False"
+                            CornerRadius="88" BackgroundColor="{StaticResource Primary}"
+                            SemanticProperties.Description="Start Safety Mode. Listen for your saved safe phrase." />
+                    <Button x:Name="StopSafetyButton" Margin="10" Clicked="OnStopSafetyClicked" IsEnabled="False" IsVisible="False"
+                            CornerRadius="88" BackgroundColor="#B43C47"
+                            SemanticProperties.Description="Stop Safety Mode and microphone listening" />
+                    <Button x:Name="RetryVoiceSosButton" Margin="10" Clicked="OnRetryVoiceSosClicked" IsVisible="False"
+                            CornerRadius="88" BackgroundColor="#B43C47"
+                            SemanticProperties.Description="Open or retry the saved voice SOS countdown" />
+                    <VerticalStackLayout x:Name="StartActionVisual" InputTransparent="True" VerticalOptions="Center" Spacing="8"
+                                         AutomationProperties.IsInAccessibleTree="False">
+                        <Image Source="action_mic.png" WidthRequest="48" HeightRequest="48" />
+                        <Label Text="Start" TextColor="White" FontSize="20" FontFamily="OpenSansSemibold" HorizontalTextAlignment="Center" />
+                    </VerticalStackLayout>
+                    <VerticalStackLayout x:Name="StopActionVisual" IsVisible="False" InputTransparent="True" VerticalOptions="Center" Spacing="8"
+                                         AutomationProperties.IsInAccessibleTree="False">
+                        <Image Source="action_stop.png" WidthRequest="48" HeightRequest="48" />
+                        <Label Text="Stop" TextColor="White" FontSize="20" FontFamily="OpenSansSemibold" HorizontalTextAlignment="Center" />
+                    </VerticalStackLayout>
+                    <VerticalStackLayout x:Name="RetryActionVisual" IsVisible="False" InputTransparent="True" VerticalOptions="Center" Spacing="8"
+                                         AutomationProperties.IsInAccessibleTree="False">
+                        <Image Source="action_sos.png" WidthRequest="48" HeightRequest="48" />
+                        <Label Text="Open SOS" TextColor="White" FontSize="18" FontFamily="OpenSansSemibold" HorizontalTextAlignment="Center" />
+                    </VerticalStackLayout>
+                </Grid>
+                <ActivityIndicator x:Name="ListeningIndicator" IsVisible="False" Color="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}"
+                                   HeightRequest="20" SemanticProperties.Description="Recognition is starting or restarting" />
+                <Label x:Name="SafetyStatusLabel" Text="Safety Mode is stopped." Style="{StaticResource MutedText}"
+                       HorizontalTextAlignment="Center" />
+                <Label x:Name="SetupStatusLabel" Text="Add your phrase and contact in Settings." Style="{StaticResource MutedText}"
+                       HorizontalTextAlignment="Center" />
+                <VerticalStackLayout x:Name="ListeningDetailsPanel" Spacing="12" IsVisible="False">
+                    <Label x:Name="SavedPhraseLabel" Text="Add your safe phrase" FontFamily="OpenSansSemibold" />
+                    <Label x:Name="ContactSummaryLabel" Text="No contacts yet" Style="{StaticResource MutedText}" />
+                    <Label x:Name="ChannelSummaryLabel" Text="Message channel" Style="{StaticResource MutedText}" />
+                    <Label x:Name="RecognizedTextLabel" Text="Last recognized phrase: none yet." Style="{StaticResource MutedText}" />
+                    <Button x:Name="SpeechTestButton" Text="Recognition setup" Clicked="OnOfflineSpeechTestClicked" Style="{StaticResource SecondaryAction}" />
+                    <Label Text="Background listening is experimental. A detected phrase can wake the locked screen for Cancel / Continue SOS when full-screen alerts are allowed; otherwise tap its notification. Removing the app from recent apps stops listening."
+                           Style="{StaticResource MutedText}" FontSize="12" />
+                </VerticalStackLayout>
+            </VerticalStackLayout>
+        </ScrollView>
+        <VerticalStackLayout Grid.Row="2" Padding="24,8,24,16" Spacing="4" MaximumWidthRequest="480" HorizontalOptions="Fill">
+            <Button x:Name="TestSosButton" Text="Prepare SOS" ImageSource="action_message.png" ContentLayout="Left,10"
+                    BackgroundColor="#B43C47" TextColor="White" Clicked="OnTestSosClicked" IsEnabled="False" />
+            <Label Text="You confirm sending in WhatsApp or SMS." Style="{StaticResource MutedText}" FontSize="12" HorizontalTextAlignment="Center" />
+            <Button Text="Details" Clicked="OnToggleListeningDetailsClicked" Style="{StaticResource TextAction}" />
         </VerticalStackLayout>
-    </ScrollView>
+    </Grid>
 </ContentPage>

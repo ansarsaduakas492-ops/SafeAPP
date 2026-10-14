@@ -2,7 +2,7 @@ namespace SafePhrase
 {
     public partial class AppShell : Shell
     {
-        private bool isOpeningVoiceSos;
+        private bool isHandlingVoiceSos;
         public AppShell()
         {
             InitializeComponent();
@@ -22,25 +22,41 @@ namespace SafePhrase
         {
             MainThread.BeginInvokeOnMainThread(async () =>
             {
-                if (!SafetyModeState.IsAppVisible || isOpeningVoiceSos || !SafetyModeState.HasPendingSos)
+                if (isHandlingVoiceSos)
                     return;
-                isOpeningVoiceSos = true;
-                SafetyModeState.TakePendingSos();
+                isHandlingVoiceSos = true;
                 try
                 {
+                    bool opened = await SafetyModeState.TryOpenPendingSosAsync(
+                        async () =>
+                        {
+                            try
+                            {
+                                await GoToAsync(nameof(SosCountdownPage));
+                            }
+                            catch
+                            {
+                                SafetyModeState.SetSosFlowOpen(false);
+                                throw;
+                            }
+                        });
+                    if (!opened)
+                        return;
 #if ANDROID
-                    ((Android.App.NotificationManager)Android.App.Application.Context
-                        .GetSystemService(Android.Content.Context.NotificationService)!).Cancel(7102);
+                    if (OperatingSystem.IsAndroidVersionAtLeast(31))
+                        VoiceSosAlert.Dismiss(Android.App.Application.Context);
 #endif
-                    await GoToAsync(nameof(SosCountdownPage));
                 }
                 catch (Exception exception)
                 {
-                    await DisplayAlertAsync("Could not open voice SOS", exception.Message, "OK");
+                    string nextStep = SafetyModeState.HasPendingSos
+                        ? "The detection is saved. Return to Home and tap Open SOS, or reopen SafePhrase."
+                        : "The countdown opened, but its notification could not be dismissed.";
+                    await DisplayAlertAsync("Voice SOS", $"{nextStep}\n{exception.Message}", "OK");
                 }
                 finally
                 {
-                    isOpeningVoiceSos = false;
+                    isHandlingVoiceSos = false;
                 }
             });
         }

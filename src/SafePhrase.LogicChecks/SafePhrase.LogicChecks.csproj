@@ -7,5 +7,9 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="../SafePhrase/SafePhraseMatcher.cs" Link="SafePhraseMatcher.cs" />
+    <Compile Include="../SafePhrase/SafetyModeState.cs" Link="SafetyModeState.cs" />
+    <Compile Include="../SafePhrase/SosFlowGuard.cs" Link="SosFlowGuard.cs" />
+    <Compile Include="../SafePhrase/SosMessageBuilder.cs" Link="SosMessageBuilder.cs" />
+    <Compile Include="../SafePhrase/SafetySettings.cs" Link="SafetySettings.cs" />
   </ItemGroup>
 </Project>

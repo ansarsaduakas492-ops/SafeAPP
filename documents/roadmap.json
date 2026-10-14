@@ -5,7 +5,7 @@
   "endDate": "2026-10-08",
   "timezone": "Europe/Kyiv",
   "scheduleConfirmed": true,
-  "updated": "2026-10-02",
+  "updated": "2026-10-13",
   "milestones": [
     {
       "id": "M0",
@@ -180,9 +180,9 @@
           "evidence": [
             "2026-09-24 student first reported `LanguageUnavailable` for en-US using the explicit on-device recognizer; Android defines this as a supported language currently unavailable, such as a model not yet downloaded. HyperOS Settings search did not expose an on-device model menu, so agent added an in-app Android 13+ support check and model-download request. Student now reports that English speech recognition works in the updated app. Whether it works with all network connectivity disabled, repeated sessions, silence/unrelated speech, and Stop remains unverified.",
             "2026-09-27 student reports a successful English recognition session with Wi-Fi disabled on the POCO C65 (Android 15/API 35). This verifies offline recognition for that run only. Mobile data state was not specified; the remaining session matrix is still pending.",
-          "2026-10-01 student reports successful English recognition after instructions to enable airplane mode and disable Wi-Fi. This is student-reported network-disabled recognition, not independently observed privacy verification.",
-          "2026-10-01 student reports listening ended after silence; tapping Listen once in English again correctly recognized speech. This verifies silence completion and one manual restart on the phone. Three consecutive attempts, unrelated speech, Stop and microphone denial remain unconfirmed. Automatic session restart for Safety Mode is not implemented.",
-          "2026-10-01 student confirms Stop prevents subsequent recognized text and a new Listen run succeeds. Three repeated attempts, unrelated speech and microphone-denial checks remain unconfirmed."
+            "2026-10-01 student reports successful English recognition after instructions to enable airplane mode and disable Wi-Fi. This is student-reported network-disabled recognition, not independently observed privacy verification.",
+            "2026-10-01 student reports listening ended after silence; tapping Listen once in English again correctly recognized speech. This verifies silence completion and one manual restart on the phone. Three consecutive attempts, unrelated speech, Stop and microphone denial remain unconfirmed. Automatic session restart for Safety Mode is not implemented.",
+            "2026-10-01 student confirms Stop prevents subsequent recognized text and a new Listen run succeeds. Three repeated attempts, unrelated speech and microphone-denial checks remain unconfirmed."
           ]
         },
         {
@@ -251,11 +251,11 @@
           "title": "Change the default message manually; run Cancel, permission denial, SMS preparation, and fallback checks on the phone",
           "status": "doing",
           "evidence": [
-          "2026-10-01 student report: Cancel during Test SOS countdown works on the phone, following the requested check for return to Home without opening WhatsApp. Send Now, message content, permissions and fallback checks remain pending.",
-          "2026-10-01 student reports WhatsApp chat and prepared message work; reports Send Now check succeeded after instructions to open immediately and only once. No message delivery is claimed. SMS, denied location, copy fallback and manual message edit remain pending.",
-          "2026-10-01 student reports SMS flow works after identifying the app-selection prompt as Android UI. Message preparation is student-reported successful; recipient receipt was not separately confirmed. Location denial, copy fallback and manual message edit remain pending.",
-          "2026-10-01 student confirms Location unavailable appeared after the instructed denial of location permission and Test SOS run. This is student-reported denied-location message evidence. Copy fallback and manual default-message edit remain pending; M2-3 is not complete."
-        ]
+            "2026-10-01 student report: Cancel during Test SOS countdown works on the phone, following the requested check for return to Home without opening WhatsApp. Send Now, message content, permissions and fallback checks remain pending.",
+            "2026-10-01 student reports WhatsApp chat and prepared message work; reports Send Now check succeeded after instructions to open immediately and only once. No message delivery is claimed. SMS, denied location, copy fallback and manual message edit remain pending.",
+            "2026-10-01 student reports SMS flow works after identifying the app-selection prompt as Android UI. Message preparation is student-reported successful; recipient receipt was not separately confirmed. Location denial, copy fallback and manual message edit remain pending.",
+            "2026-10-01 student confirms Location unavailable appeared after the instructed denial of location permission and Test SOS run. This is student-reported denied-location message evidence. Copy fallback and manual default-message edit remain pending; M2-3 is not complete."
+          ]
         },
         {
           "id": "M2-4",
@@ -278,8 +278,8 @@
         "S1",
         "M2"
       ],
-      "forecast": "at_risk",
-      "forecastNote": "2026-10-01: experimental background voice source is implemented following explicit user scope extension; remaining speech/SOS prerequisites and locked-screen/device acceptance are open. October 6 checkpoint and October 8 APK remain at risk; dates unchanged.",
+      "forecast": "late",
+      "forecastNote": "2026-10-14: agent source tasks through M3-7 include lock-screen confirmation and explicit background SMS sending; final Android Debug build passes in isolated output. October 6 readiness remains overdue: S1/M2, phone wake/Cancel/unlock/SMS evidence, student M3-3 and mentor acceptance remain open. M4 standalone packaging pending; dates unchanged.",
       "outcome": "The real voice phrase starts the complete flow; SMS and WhatsApp are available.",
       "demo": "Start listening, say an unrelated phrase then the trigger, cancel once, repeat, and open the chosen channel. Show Stop.",
       "concepts": [
@@ -293,10 +293,11 @@
         "Repeated detections do not create overlapping countdowns or message composers.",
         "Agreed foreground/lock-screen behavior and restart rules work; Stop stops audio processing.",
         "SMS and WhatsApp preparation, channel selection, recipient behavior, and missing-app fallback tested.",
+        "After explicit background confirmation, permissioned direct SMS sends to saved contacts without a second composer Send action; denied permission retains manual composition. Receipt status is not proof of delivery.",
         "Student adds a small phrase-normalization test case manually and explains it.",
         "WhatsApp opens the selected contact with encoded text, including +996 numbers and the agreed message language. The user confirms sending; recipients need no SafePhrase app. Opening the composer is not proof of delivery."
       ],
-      "review": "",
+      "review": "2026-10-13 M3-4 integrated source review completed. Independent reviewer found settings snapshot drift, early listening claims and queued-start races; fixes and ID-aware stale-command cleanup were re-reviewed with no remaining actionable finding. Coordinator reviewed cancellation/navigation/fallback guards, location consent timing, message encoding, native UI controls and privacy configuration. Forty logic checks and full Android Debug build pass. See documents/code-review.md. This completes source review, not phone/student/mentor acceptance. 2026-10-13 M3-6 lock-screen increment independently reviewed and fixes re-reviewed (detection ownership, resumed/unlocked continuation, cancellation/Back, separate error channel). No remaining actionable finding. Device behavior remains unconfirmed. Guided-permission startup follow-up also independently reviewed: same-generation wait, permission/visibility recheck, Stop cancellation and listener cleanup have no actionable finding.",
       "acceptanceEvidence": [],
       "mentorAcceptance": "",
       "tasks": [
@@ -304,9 +305,12 @@
           "id": "M3-1",
           "owner": "agent",
           "title": "Integrate verified speech, normalized matching, session completion handling, Safety Mode state, and lifecycle cleanup",
-          "status": "doing",
-          "evidence": ["2026-10-01 independent preparation: added SafePhraseMatcher and a package-free logic-check executable; all 11 checks passed for normalized matching, nonmatches, empty inputs and Unicode. Voice integration remains pending S1/M2 readiness and lifecycle agreement; no Safety Mode device success is claimed.",
-            "2026-10-01 user explicitly authorized an experimental background-listening extension without mentor approval. Implemented microphone foreground service, notification/Stop, bounded error recovery, session restarts, normalized phrase matching and pending SOS routing. Android Compile passes with 0 warnings/errors; 11 phrase checks pass. Independent source review findings were fixed and re-reviewed. Background device feasibility, remaining S1/M2 evidence and final acceptance stay open."]
+          "status": "done",
+          "evidence": [
+            "2026-10-01 independent preparation: added SafePhraseMatcher and a package-free logic-check executable; all 11 checks passed for normalized matching, nonmatches, empty inputs and Unicode. Voice integration remains pending S1/M2 readiness and lifecycle agreement; no Safety Mode device success is claimed.",
+            "2026-10-01 user explicitly authorized an experimental background-listening extension without mentor approval. Implemented microphone foreground service, notification/Stop, bounded error recovery, session restarts, normalized phrase matching and pending SOS routing. Android Compile passes with 0 warnings/errors; 11 phrase checks pass. Independent source review findings were fixed and re-reviewed. Background device feasibility, remaining S1/M2 evidence and final acceptance stay open.",
+            "2026-10-08 agent implemented the student-approved completion plan: pending SOS is cleared after successful navigation only, failed navigation retains detection and offers Home retry, concurrent voice opening is guarded, and manual Test SOS is blocked while a detection is pending. Added in-memory recognized-text preview reset at session start. Existing on-device en-US restart/error/Stop/recents behavior is retained. Full Android Debug build passed with 0 warnings/errors on SDK 10.0.401; 11 phrase and 11 voice-state checks passed. Focused independent review found no material issue. This completes the agent implementation only; student/device evidence, S1/M2 readiness and mentor acceptance are not claimed."
+          ]
         },
         {
           "id": "M3-2",
@@ -328,8 +332,40 @@
           "id": "M3-4",
           "owner": "agent",
           "title": "Perform focused independent review of speech/privacy and SOS state transitions; fix findings and prepare Tuesday evidence",
-          "status": "pending",
-          "evidence": []
+          "status": "done",
+          "evidence": [
+            "2026-10-13 completed integrated source review of listening -> pending SOS -> countdown -> SMS/WhatsApp. Fixed snapshot/settings drift, readiness claims, queued start/Stop generation ownership, stale-command cleanup, cancellation/navigation/fallback continuations, permission timing and international-recipient validation. Independent read-only reviewer re-reviewed fixes and reported no remaining actionable finding. Forty linked-logic checks pass and final full Android Debug build passes with 0 warnings/errors after approved rebuild of damaged AAPT2 intermediates. documents/code-review.md records findings, Tuesday checkpoint and evidence boundaries. Student/device/mentor gates and standalone M4 packaging remain open; no push or deployment."
+          ]
+        },
+        {
+          "id": "M3-5",
+          "owner": "agent",
+          "title": "Refresh existing safety screens from the student's reference principles without adding new device or messaging features",
+          "status": "done",
+          "evidence": [
+            "2026-10-12 follow-up: student called the initial UI overwhelming. Agent replaced Home cards/badges/marketing copy with one principal action, service status and fixed SOS/Details footer. Setup hints appear only when missing; setup/contact/recognition details remain behind disclosure. Settings is a compact form with smaller contact cards; SOS uses a plain smaller dial and retains fixed actions. Background, retry, contact CRUD and manual sending are preserved. Latest Android Compile passed with 0 warnings/errors; local source review checked named controls, event wiring, error visibility and pinned cancellation. No new full/standalone APK build, phone rendering or student/mentor acceptance claimed.",
+            "2026-10-12 student explicitly requested an interface refresh. Agent added a shared light/dark teal design, one central Start/Stop/Open voice SOS action, real contact summaries and contact CRUD cards, grouped settings, a large countdown with pinned cancellation/message actions, and a matching recognition helper. Existing event handlers, background recognition, persistence and manual sending remain. Android Compile and ordinary Debug build of the final revision passed with 0 warnings/errors using single-node/no-shared compilation. This Debug configuration uses fast deployment; a subsequent standalone APK attempt with embedded assemblies failed on AAPT2 pipe closure, and elevated retry is unavailable due to the approval-review usage limit. Independent UI review identified offscreen Cancel on short screens; actions were pinned outside scrolling content and re-review confirmed the finding resolved. UI code completion is separate from standalone packaging, device rendering, student work and mentor acceptance.",
+            "2026-10-13 user requested clearer, more pleasant controls during M3-4. Added native SVG microphone/stop/SOS/message/settings/cancel icons, circular action surround, outlined timer and honest readiness/progress indicator. Preserved compact default view, Details disclosure, accessible descriptions, fixed actions and manual sending. Full Android Debug build passes; rendered-phone/student acceptance remains pending."
+          ]
+        },
+        {
+          "id": "M3-6",
+          "owner": "agent",
+          "title": "Add permission-gated lock-screen voice SOS confirmation with Cancel and authenticated continuation",
+          "status": "done",
+          "evidence": [
+            "2026-10-13 student authorized waking/opening the application after background trigger. Added high-importance full-screen SOS notification, non-exported native confirmation/Cancel receiver, explicit Android14+ special-access settings, generic lock-screen view, ordinary unlock before existing manual message flow and notification fallback. Detection IDs reject stale intents/callbacks; Cancel and both Back APIs clear before MainActivity can resume its pending route. Final independent re-review reported no actionable issue. All 46 linked checks pass; final full Android Debug build passes with 0 warnings/errors and generated manifest includes components/permission. documents/lock-screen-sos.md records official platform constraints and unconfirmed phone wake/rotation/unlock evidence. No deployment, message, push or date change.",
+            "2026-10-13 guided-permission follow-up: student requested the app propose needed access instead of manual settings lookup. Start offers missing full-screen access, opens the precise Android page, waits for return and rechecks permission before same-request dispatch; refusal offers notification-only/Cancel. Existing grants skip the offer. Stop/generation/visibility gates and temporary-listener cleanup preserved. Independent focused review found no actionable issue. Full Android Debug verification passes with 0 warnings/errors in isolated obj/PermissionPrompt and bin/PermissionPrompt paths because Visual Studio holds the ordinary generated assembly (XALNS7024); IDE/files left intact. Pure logic unchanged, prior 46 results reused. Phone return flow/acceptance remain open."
+          ]
+        },
+        {
+          "id": "M3-7",
+          "owner": "agent",
+          "title": "Send SMS directly after explicit background SOS confirmation, with permission, duplicate protection, and honest status",
+          "status": "done",
+          "evidence": [
+            "2026-10-14 implemented the requested background-confirmation path: after the user taps Send SOS SMS and unlocks, Android SmsManager sends to each saved contact without a second composer action. Start offers SEND_SMS permission; denial retains the manual message-app route. A synchronous private confirmation ledger blocks the same detection from being sent again after process interruption; unknown native outcomes are never retried automatically. SMS submission callbacks are not recipient-delivery proof. Final isolated Android Debug build passed with 0 warnings/errors. Independent re-review confirmed claim ownership, notification failures, native uncertainty and cleanup fixes with no remaining actionable finding. No SMS was sent and no phone behavior is claimed. See confirmed-sms.md."
+          ]
         }
       ]
     },
@@ -342,8 +378,8 @@
       "dependsOn": [
         "M3"
       ],
-      "forecast": "at_risk",
-      "forecastNote": "2026-10-01 forecast: October 8 APK target is at risk because voice integration and required device acceptance remain incomplete. Dates and required scope are unchanged; prioritize core checks and defer optional polish.",
+      "forecast": "late",
+      "forecastNote": "2026-10-12: the October 8 final delivery target has passed without recorded acceptance. Background/UI code and ordinary Android Debug compilation are complete, but M3 readiness, physical-device acceptance, standalone packaging, final handoff and the student walkthrough remain open. Standalone packaging encountered AAPT2 pipe errors; elevated retry is unavailable due to the approval-review usage limit. M4 tasks stay pending; dates and scope are unchanged.",
       "outcome": "An installable APK, requirement evidence, honest limitations, and a student who can explain the app.",
       "demo": "Install the APK, configure it, trigger and cancel SOS, repeat to prepare a message, then explain the main flow and one manual change.",
       "concepts": [

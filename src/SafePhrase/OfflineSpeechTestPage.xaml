@@ -2,19 +2,27 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="SafePhrase.OfflineSpeechTestPage"
-             Title="Offline speech test">
-    <ScrollView>
-        <VerticalStackLayout Padding="24" Spacing="16">
-            <Label Text="Offline speech experiment" Style="{StaticResource Headline}"
+             Title="Recognition setup">
+    <ScrollView MaximumWidthRequest="600" HorizontalOptions="Center">
+        <VerticalStackLayout Padding="20,16" Spacing="16">
+            <Label Text="English on your phone" Style="{StaticResource PageTitle}"
                    SemanticProperties.HeadingLevel="Level1" />
-            <Label Text="This is a one-session microphone test. It does not activate Safety Mode or send anything." />
+            <Label Text="Prepare on-device English recognition before using Safety Mode. This page listens once and does not prepare or send SOS."
+                   Style="{StaticResource MutedText}" />
             <Button Text="Check / prepare English offline model" Clicked="OnCheckAvailabilityClicked" />
-            <Label x:Name="StatusLabel" Text="Check whether English (US) is installed for on-device recognition." />
+            <Border Style="{StaticResource SafetyCard}">
+                <Label x:Name="StatusLabel" Text="Check whether English (US) is installed for on-device recognition." />
+            </Border>
             <Button x:Name="ListenButton" Text="Listen once in English" Clicked="OnListenClicked" />
-            <Button x:Name="StopButton" Text="Stop" Clicked="OnStopClicked" IsEnabled="False" />
-            <Label Text="Recognized text" Style="{StaticResource SubHeadline}" />
-            <Label x:Name="ResultLabel" Text="(no result yet)" />
-            <Label Text="The recognizer is explicitly on-device. We will verify offline operation on your phone before relying on this approach." FontSize="13" />
+            <Button x:Name="StopButton" Text="Stop listening" Clicked="OnStopClicked" IsEnabled="False" Style="{StaticResource SecondaryAction}" />
+            <Border Style="{StaticResource SafetyCard}">
+                <VerticalStackLayout Spacing="10">
+                    <Label Text="Recognized text" Style="{StaticResource SectionTitle}" />
+                    <Label x:Name="ResultLabel" Text="(no result yet)" />
+                </VerticalStackLayout>
+            </Border>
+            <Label Text="Recognition is explicitly on-device. Device support and the downloaded English model determine availability."
+                   Style="{StaticResource MutedText}" FontSize="13" />
         </VerticalStackLayout>
     </ScrollView>
 </ContentPage>
