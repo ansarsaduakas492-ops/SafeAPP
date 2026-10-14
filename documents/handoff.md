@@ -1,6 +1,6 @@
 # Current handoff
 
-Updated: 2026-10-14. Keep Russian concise. The student prefers agent-led code and a compact UI. Preserve existing work. The student requested commit and push; branch main tracks origin/main. Do not claim phone validation or a real SMS.
+Updated: 2026-10-14. Keep Russian concise. The student prefers agent-led code and a compact UI. The full project change was committed as `017446b` and pushed to `origin/main`; the roadmap records source completion, not phone validation. Do not claim a real SMS was sent.
 
 ## Current state
 
@@ -12,8 +12,8 @@ M3 source implementation tasks M3-1 through M3-7 are recorded done, but M3 remai
 
 ## Next actions
 
-Complete the requested commit and push of the full project changes after reviewing the staged diff and confirming same-branch upstream. Then the student can install/run from Visual Studio, verify the permission offer and use a consenting test contact to observe actual SMS status. Never record private contact data. Continue M4 packaging and walkthrough afterward.
+The student can install/run from Visual Studio, verify the permission offer and use a consenting test contact to observe actual SMS status. Never record private contact data. Continue M4 packaging and walkthrough afterward.
 
 ## Paste into a fresh chat
 
-> Continue SafePhrase using AGENTS.md and documents/handoff.md. M3-7 adds direct SMS after explicit background confirmation; read confirmed-sms.md and lock-screen-sos.md. Source tasks are done, but S1/M2, student M3-3, phone permission/wake/SMS behavior, mentor acceptance and M4 packaging/demo remain open. Do not claim a message was delivered. The user requested a commit and push; check handoff for the latest Git result.
+> Continue SafePhrase using AGENTS.md and documents/handoff.md. M3-7 adds direct SMS after explicit background confirmation; read confirmed-sms.md and lock-screen-sos.md. Source tasks are done, but S1/M2, student M3-3, phone permission/wake/SMS behavior, mentor acceptance and M4 packaging/demo remain open. Do not claim a message was delivered. Latest implementation commit 017446b is pushed to origin/main.

@@ -49,7 +49,7 @@ body{margin:0;background:var(--background);color:var(--foreground);font:400 var(
   "endDate": "2026-10-08",
   "timezone": "Europe/Kyiv",
   "scheduleConfirmed": true,
-  "updated": "2026-10-13",
+  "updated": "2026-10-14",
   "milestones": [
     {
       "id": "M0",
@@ -341,7 +341,7 @@ body{margin:0;background:var(--background);color:var(--foreground);font:400 var(
         "Student adds a small phrase-normalization test case manually and explains it.",
         "WhatsApp opens the selected contact with encoded text, including +996 numbers and the agreed message language. The user confirms sending; recipients need no SafePhrase app. Opening the composer is not proof of delivery."
       ],
-      "review": "2026-10-13 M3-4 integrated source review completed. Independent reviewer found settings snapshot drift, early listening claims and queued-start races; fixes and ID-aware stale-command cleanup were re-reviewed with no remaining actionable finding. Coordinator reviewed cancellation/navigation/fallback guards, location consent timing, message encoding, native UI controls and privacy configuration. Forty logic checks and full Android Debug build pass. See documents/code-review.md. This completes source review, not phone/student/mentor acceptance. 2026-10-13 M3-6 lock-screen increment independently reviewed and fixes re-reviewed (detection ownership, resumed/unlocked continuation, cancellation/Back, separate error channel). No remaining actionable finding. Device behavior remains unconfirmed. Guided-permission startup follow-up also independently reviewed: same-generation wait, permission/visibility recheck, Stop cancellation and listener cleanup have no actionable finding.",
+      "review": "2026-10-13 M3-4 integrated source review completed. Independent reviewer found settings snapshot drift, early listening claims and queued-start races; fixes and ID-aware stale-command cleanup were re-reviewed with no remaining actionable finding. Coordinator reviewed cancellation/navigation/fallback guards, location consent timing, message encoding, native UI controls and privacy configuration. Forty logic checks and full Android Debug build pass. See documents/code-review.md. This completes source review, not phone/student/mentor acceptance. 2026-10-13 M3-6 lock-screen increment independently reviewed and fixes re-reviewed (detection ownership, resumed/unlocked continuation, cancellation/Back, separate error channel). Guided-permission startup follow-up also independently reviewed: same-generation wait, permission/visibility recheck, Stop cancellation and listener cleanup have no actionable finding. 2026-10-14 M3-7 direct-SMS confirmation flow received independent review; claim ownership, notification isolation, uncertain outcomes and cleanup fixes were re-reviewed with no remaining actionable finding. Device behavior remains unconfirmed.",
       "acceptanceEvidence": [],
       "mentorAcceptance": "",
       "tasks": [
