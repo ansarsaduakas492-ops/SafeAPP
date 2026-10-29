@@ -422,7 +422,8 @@
           "title": "Perform focused final review and relevant validation; prepare the candidate and an accurate final handoff",
           "status": "done",
           "evidence": [
-            "2026-10-29 produced standalone SafePhrase 1.0 Release APK (29,642,434 bytes; SHA-256 1c3070f67f4d0594870939c804a6981579771ceaedf45e3df4058ae2e31cebd0), signed with local Android test certificate. Final publish has no warning/error lines; all 58 linked checks pass. Independent focused review found no remaining blocking issue. Verified v1/v2/v3 signatures, 16 KB alignment, API21/36 metadata, arm64-v8a/x86_64 runtime and embedded assembly stores. Prepared APK/README/build/verification/checksum bundle and accurate handoff. No installation, outgoing message, delivery or mentor acceptance claimed."
+            "2026-10-29 produced standalone SafePhrase 1.0 Release APK (29,642,434 bytes; SHA-256 1c3070f67f4d0594870939c804a6981579771ceaedf45e3df4058ae2e31cebd0), signed with local Android test certificate. Final publish has no warning/error lines; all 58 linked checks pass. Independent focused review found no remaining blocking issue. Verified v1/v2/v3 signatures, 16 KB alignment, API21/36 metadata, arm64-v8a/x86_64 runtime and embedded assembly stores. Prepared APK/README/build/verification/checksum bundle and accurate handoff. No installation, outgoing message, delivery or mentor acceptance claimed.",
+            "2026-10-29 user-authorized repository publication verified: packaging commit f2be249 pushed to main, remote SHA matched. GitHub prerelease v1.0.0-rc.1 is published with six assets; each remote asset SHA-256 digest matched its local file. APK/build configuration unchanged by the final publication documentation commit."
           ]
         },
         {
