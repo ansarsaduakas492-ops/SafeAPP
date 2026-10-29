@@ -1,19 +1,17 @@
 # Current handoff
 
-Updated: 2026-10-14. Keep Russian concise. The student prefers agent-led code and a compact UI. The full project change was committed as `017446b` and pushed to `origin/main`; the roadmap records source completion, not phone validation. Do not claim a real SMS was sent.
+Updated: 2026-10-29. Keep Russian concise. The user requested an APK/README, then explicitly authorized commit/push and repository distribution. Source base before packaging: `1039b18`. No unrelated Pioneer drafts were changed or included.
 
 ## Current state
 
-M3-7 implements direct Android SMS after explicit confirmation of a background SOS. Start offers SEND_SMS permission. The lock-screen prompt offers Cancel SOS / Send SOS SMS; ordinary device unlock is still required. With permission, SafePhrase sends to saved contacts without opening a composer for another Send tap. If permission is unavailable, it offers the existing manual message-app route. Foreground/manual SMS and WhatsApp remain manual. A synchronous private claim prevents replay of the same detection after process interruption. Ambiguous or partial native results are not retried automatically; sent callbacks are not proof of delivery. See confirmed-sms.md and lock-screen-sos.md.
+Standalone SafePhrase 1.0 Release APK is prepared in `artifacts/SafePhrase-1.0/` with README, build notes, verification matrix and checksums; a ZIP bundle is alongside it. Candidate release: `v1.0.0-rc.1` at `https://github.com/ansarsaduakas492-ops/SafeAPP/releases/tag/v1.0.0-rc.1`. Publication is the remaining repository operation for this packaging session; verify it before reporting success.
 
-Latest Android Debug build passes with 0 warnings/errors in isolated `obj/SmsConfirmation` and `bin/SmsConfirmation` directories. The Visual Studio-owned ordinary outputs were left untouched. Independent final review found no actionable issue. No tests were run for this increment; the earlier 46 linked checks predate the updated claim callback. No device deployment or SMS send occurred. Permission, default SIM, carrier and lock-screen behavior remain unconfirmed.
+All 58 linked checks and final Release publish pass. Verified v1/v2/v3 APK signatures, 16 KB alignment, API21 minimum/API36 target, arm64-v8a/x86_64 embedded assembly stores/runtime. APK SHA-256: `1c3070f67f4d0594870939c804a6981579771ceaedf45e3df4058ae2e31cebd0`. Local Android test certificate, no keys in delivery. Focused independent review found no remaining blocking issue after output exclusions and WhatsApp URL privacy corrections. See `apk-build.md` and `verification.md`.
 
-M3 source implementation tasks M3-1 through M3-7 are recorded done, but M3 remains active/late. S1/M2 evidence, student M3-3, device scenarios and mentor acceptance remain open. M4 APK/instructions/demo remains pending. October 6/8 targets are overdue and unchanged. Do not conflate code/build, student/device evidence or mentor acceptance.
+M4-1/M4-3 agent work is done. M3 readiness, S1/M2 evidence, student M3-3, APK installation/device scenarios, walkthrough and mentor acceptance remain open. October 6/8 targets remain overdue; no dates changed. No phone deployment or message send occurred. Direct background SMS needs explicit confirmation/unlock, permission and default SIM; foreground SMS/WhatsApp need manual Send.
 
-## Next actions
+## Next action / fresh-chat prompt
 
-The student can install/run from Visual Studio, verify the permission offer and use a consenting test contact to observe actual SMS status. Never record private contact data. Continue M4 packaging and walkthrough afterward.
+At this packaging boundary, use a fresh chat for phone acceptance to keep one task focused:
 
-## Paste into a fresh chat
-
-> Continue SafePhrase using AGENTS.md and documents/handoff.md. M3-7 adds direct SMS after explicit background confirmation; read confirmed-sms.md and lock-screen-sos.md. Source tasks are done, but S1/M2, student M3-3, phone permission/wake/SMS behavior, mentor acceptance and M4 packaging/demo remain open. Do not claim a message was delivered. Latest implementation commit 017446b is pushed to origin/main.
+> Continue SafePhrase using AGENTS.md and documents/handoff.md. The 2026-10-29 standalone Release APK candidate and README are prepared; read documents/verification.md and documents/apk-build.md. First guide installation, settings persistence and Prepare SOS cancellation on the actual phone. Do not mark device, delivery, student learning or mentor acceptance complete without evidence. The build has a test signing certificate and English on-device recognition; background direct SMS differs from the manual composer flow.

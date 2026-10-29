@@ -49,7 +49,7 @@ body{margin:0;background:var(--background);color:var(--foreground);font:400 var(
   "endDate": "2026-10-08",
   "timezone": "Europe/Kyiv",
   "scheduleConfirmed": true,
-  "updated": "2026-10-14",
+  "updated": "2026-10-29",
   "milestones": [
     {
       "id": "M0",
@@ -423,7 +423,7 @@ body{margin:0;background:var(--background);color:var(--foreground);font:400 var(
         "M3"
       ],
       "forecast": "late",
-      "forecastNote": "2026-10-12: the October 8 final delivery target has passed without recorded acceptance. Background/UI code and ordinary Android Debug compilation are complete, but M3 readiness, physical-device acceptance, standalone packaging, final handoff and the student walkthrough remain open. Standalone packaging encountered AAPT2 pipe errors; elevated retry is unavailable due to the approval-review usage limit. M4 tasks stay pending; dates and scope are unchanged.",
+      "forecastNote": "2026-10-29: the user explicitly requested agent APK packaging and README, then commit/push and repository distribution. Standalone test-signed Release APK, instructions and requirement matrix are prepared; 58 logic checks, package signature/alignment and focused independent review pass. M3 readiness, physical-device installation/acceptance, student walkthrough and mentor acceptance remain open. The October 8 target is overdue; dates and scope are unchanged. Next: install this exact candidate and verify persistence/cancellation before deliberate message tests.",
       "outcome": "An installable APK, requirement evidence, honest limitations, and a student who can explain the app.",
       "demo": "Install the APK, configure it, trigger and cancel SOS, repeat to prepare a message, then explain the main flow and one manual change.",
       "concepts": [
@@ -438,7 +438,7 @@ body{margin:0;background:var(--background);color:var(--foreground);font:400 var(
         "Final review has no unresolved blocking findings; remaining limitations are listed for mentor review and no credentials or personal contact data are committed.",
         "Student explains the flow, performs a small change, and describes privacy, offline, foreground, and manual-send limitations."
       ],
-      "review": "",
+      "review": "2026-10-29 focused independent final candidate review found no blocking source/document issue after preserving whole bin/obj exclusions for isolated Base output paths and clarifying WhatsApp URL privacy. Release JSON reflection is enabled; 58 linked checks and final Release publish pass. APK signature v1/v2/v3, 16 KB alignment, metadata and embedded runtime/assembly stores verified locally. Physical-device behavior and mentor acceptance remain unverified.",
       "acceptanceEvidence": [],
       "mentorAcceptance": "",
       "tasks": [
@@ -446,22 +446,28 @@ body{margin:0;background:var(--background);color:var(--foreground);font:400 var(
           "id": "M4-1",
           "owner": "agent",
           "title": "Complete the requirement/check matrix, fix device regressions, and write concise build/run/limitations notes",
-          "status": "pending",
-          "evidence": []
+          "status": "done",
+          "evidence": [
+            "2026-10-29 replaced obsolete README with installation/setup/permissions/manual and background SOS instructions, troubleshooting and privacy limits. Added apk-build.md with reproduction/signing/hash metadata and verification.md mapping FR-01 through FR-20 and AC-01 through AC-06 to source/logic evidence and explicitly pending phone checks. No new device regression was reported or claimed fixed; device acceptance remains M4-2."
+          ]
         },
         {
           "id": "M4-2",
           "owner": "student",
-          "title": "Build with guidance, install the APK, run the acceptance scenarios, and report real device results",
+          "title": "Install the agent-packaged APK, run the acceptance scenarios, and report real device results",
           "status": "pending",
-          "evidence": []
+          "evidence": [
+            "2026-10-29 the student explicitly requested the agent build the APK, replacing the guided student-build activity. Agent packaging does not complete student installation, device scenarios or learning evidence."
+          ]
         },
         {
           "id": "M4-3",
           "owner": "agent",
           "title": "Perform focused final review and relevant validation; prepare the candidate and an accurate final handoff",
-          "status": "pending",
-          "evidence": []
+          "status": "done",
+          "evidence": [
+            "2026-10-29 produced standalone SafePhrase 1.0 Release APK (29,642,434 bytes; SHA-256 1c3070f67f4d0594870939c804a6981579771ceaedf45e3df4058ae2e31cebd0), signed with local Android test certificate. Final publish has no warning/error lines; all 58 linked checks pass. Independent focused review found no remaining blocking issue. Verified v1/v2/v3 signatures, 16 KB alignment, API21/36 metadata, arm64-v8a/x86_64 runtime and embedded assembly stores. Prepared APK/README/build/verification/checksum bundle and accurate handoff. No installation, outgoing message, delivery or mentor acceptance claimed."
+          ]
         },
         {
           "id": "M4-4",

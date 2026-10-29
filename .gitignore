@@ -4,3 +4,8 @@
 **/obj/
 *.user
 *.suo
+
+# Local APK handoff bundles and signing keys.
+/artifacts/
+*.keystore
+*.jks
